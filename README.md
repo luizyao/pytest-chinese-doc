@@ -20,7 +20,7 @@
 
   `src/`目录下包含所有的示例源码，以章节划分；
 
-- 进入项目的根目录下，执行`pipenv install --ignore-pipfile`
+- 进入项目的根目录下，执行`pipenv install`，创建仓库的虚拟环境
 
 
 # 目录
