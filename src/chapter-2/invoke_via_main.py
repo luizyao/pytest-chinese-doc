@@ -2,9 +2,9 @@
 # -*- coding:utf-8 -*-
 '''
 Author: Luiz Yao (luizyao@163.com)
-Created Date: 2019-09-27 6:38:24
+Created Date: 2019-09-27 16:33:39
 -----
-Last Modified: 2019-09-27 16:17:24
+Last Modified: 2019-09-27 17:18:26
 Modified By: Luiz Yao (luizyao@163.com)
 -----
 THIS PROGRAM IS FREE SOFTWARE, IS LICENSED UNDER MIT.
@@ -19,20 +19,14 @@ Date      		By      		Comments
 ----------		--------		---------------------------------------------------------
 '''
 
-import pytest
+import time
 
 
 def test_one():
-    print('test_one')
-    assert 1
+    time.sleep(10)
 
 
-class TestNodeId:
-    def test_one(self):
-        print('TestNodeId::test_one')
-        assert 1
-
-    @pytest.mark.parametrize('x,y', [(1, 1), (3, 4)])
-    def test_two(self, x, y):
-        print(f'TestNodeId::test_two::{x} == {y}')
-        assert x == y
+if __name__ == '__main__':
+    import pytest
+    ret = pytest.main(['-q', __file__])
+    print("pytest.main() 返回 pytest.ExitCode.INTERRUPTED：", ret == pytest.ExitCode.INTERRUPTED)

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+  <testsuite errors="0" failures="0" hostname="NJ-LUYAO-T460" name="pytest_chinese_doc" skipped="0" tests="1"
+    time="0.027" timestamp="2019-09-27T15:52:34.562238">
+    <properties>
+      <property name="EXECUTOR" value="luizyao" />
+      <property name="LOCATION" value="NJ" />
+    </properties>
+    <testcase classname="test_xml_report" file="test_xml_report.py" line="46" name="test_record_property3" time="0.002">
+    </testcase>
+  </testsuite>
+</testsuites>

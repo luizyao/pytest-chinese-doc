@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+  <testsuite errors="0" failures="0" hostname="NJ-LUYAO-T460" name="pytest_chinese_doc" skipped="0" tests="1"
+    time="0.024" timestamp="2019-09-27T15:02:41.277369">
+    <testcase classname="test_xml_report" file="test_xml_report.py" line="22" name="test_record_property" time="0.002">
+      <properties>
+        <property name="test_id" value="10010" />
+      </properties>
+    </testcase>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+  <testsuite errors="0" failures="0" hostname="NJ-LUYAO-T460" name="pytest_chinese_doc" skipped="0" tests="1"
+    time="0.030" timestamp="2019-09-27T14:33:32.459788">
+    <testcase classname="test_nodeid" file="test_nodeid.py" line="24" name="test_one" time="0.002">
+      <system-out>test_one
+      </system-out>
+    </testcase>
+  </testsuite>
+</testsuites>
