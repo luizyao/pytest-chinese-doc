@@ -2,9 +2,9 @@
 # -*- coding:utf-8 -*-
 '''
 Author: Luiz Yao (luizyao@163.com)
-Created Date: 2019-09-12 14:28:25
+Created Date: 2019-09-29 17:14:28
 -----
-Last Modified: 2019-09-29 15:18:30
+Last Modified: 2019-09-29 17:45:35
 Modified By: Luiz Yao (luizyao@163.com)
 -----
 THIS PROGRAM IS FREE SOFTWARE, IS LICENSED UNDER MIT.
@@ -19,23 +19,11 @@ Date      		By      		Comments
 ----------		--------		---------------------------------------------------------
 '''
 
-import pytest
+
+smtp_server = ("mail.python.org", 587)
 
 
-@pytest.fixture
-def smtp_connection():
-    import smtplib
-
-    return smtplib.SMTP("smtp.163.com", 25, timeout=5)
-
-
-def test_ehlo(smtp_connection):
-    response, _ = smtp_connection.ehlo()
+def test_163(smtp_connection_request):
+    response, _ = smtp_connection_request.ehlo()
     assert response == 250
-    assert 0  # 为了展示，强制置为失败
 
-
-def test_ehlo_yield(smtp_connection_yield):
-    response, _ = smtp_connection_yield.ehlo()
-    assert response == 250
-    assert 0  # 为了展示，强制置为失败
