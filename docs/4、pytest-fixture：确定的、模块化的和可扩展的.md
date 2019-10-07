@@ -10,17 +10,23 @@
 - [7. `fixture`的清理操作](#7-fixture%e7%9a%84%e6%b8%85%e7%90%86%e6%93%8d%e4%bd%9c)
   - [7.1. 使用`yield`代替`return`](#71-%e4%bd%bf%e7%94%a8yield%e4%bb%a3%e6%9b%bfreturn)
   - [7.2. 使用`with`写法](#72-%e4%bd%bf%e7%94%a8with%e5%86%99%e6%b3%95)
-  - [7.3. 使用contextlib.ExitStack](#73-%e4%bd%bf%e7%94%a8contextlibexitstack)
-  - [7.4. 使用`addfinalizer`方法](#74-%e4%bd%bf%e7%94%a8addfinalizer%e6%96%b9%e6%b3%95)
+  - [7.3. 使用`addfinalizer`方法](#73-%e4%bd%bf%e7%94%a8addfinalizer%e6%96%b9%e6%b3%95)
 - [8. `fixture`可以访问测试请求的上下文](#8-fixture%e5%8f%af%e4%bb%a5%e8%ae%bf%e9%97%ae%e6%b5%8b%e8%af%95%e8%af%b7%e6%b1%82%e7%9a%84%e4%b8%8a%e4%b8%8b%e6%96%87)
+- [9. `fixture`返回工厂函数](#9-fixture%e8%bf%94%e5%9b%9e%e5%b7%a5%e5%8e%82%e5%87%bd%e6%95%b0)
+- [10. `fixture`的参数化](#10-fixture%e7%9a%84%e5%8f%82%e6%95%b0%e5%8c%96)
+- [11. 在参数化的`fixture`中标记用例](#11-%e5%9c%a8%e5%8f%82%e6%95%b0%e5%8c%96%e7%9a%84fixture%e4%b8%ad%e6%a0%87%e8%ae%b0%e7%94%a8%e4%be%8b)
+- [12. 模块化：`fixture`使用其它的`fixture`](#12-%e6%a8%a1%e5%9d%97%e5%8c%96fixture%e4%bd%bf%e7%94%a8%e5%85%b6%e5%ae%83%e7%9a%84fixture)
+- [13. 高效的利用`fixture`实例](#13-%e9%ab%98%e6%95%88%e7%9a%84%e5%88%a9%e7%94%a8fixture%e5%ae%9e%e4%be%8b)
+- [14. 在类、模块和项目中使用`fixture`实例](#14-%e5%9c%a8%e7%b1%bb%e6%a8%a1%e5%9d%97%e5%92%8c%e9%a1%b9%e7%9b%ae%e4%b8%ad%e4%bd%bf%e7%94%a8fixture%e5%ae%9e%e4%be%8b)
+- [自动使用`fixture`](#%e8%87%aa%e5%8a%a8%e4%bd%bf%e7%94%a8fixture)
 
 <!-- /TOC -->
 
-`pytest fixture`的目的是提供一个固定的基线，使测试在此基础上可以可靠地、重复地执行；
+`pytest fixture`的目的是提供一个固定的基线，使测试可以在此基础上可靠地、重复地执行；
 
 对比`xUnit`经典的`setup/teardown`形式，`pytest fixture`在以下方面有了明显的改进：
 
-- 每个`fixture`都拥有一个确定的名字，使其能够在函数、类、模块，甚至整个项目中去声明使用；
+- 每个`fixture`都拥有一个确定的名字，使其能够在函数、类、模块，甚至整个测试会话中去使用；
 - `fixture`以模块化的方式实现。因为每一个`fixture`的名字都能触发一个**fixture函数**，而这个函数本身又能调用其它的`fixture`；
 - `fixture`的管理从简单的单元测试扩展到复杂的功能测试，允许通过配置和组件化的选项参数化`fixture`和测试，或者跨功能、类、模块，甚至整个测试会话中复用`fixture`；
 
@@ -30,7 +36,7 @@
 # 1. `fixture`：作为形参使用
 测试函数可以接收`fixture`的名字作为入参，其实参是对应的`fixture`函数的返回值。通过`@pytest.fixture`装饰器可以注册一个`fixture`函数；
 
-我们来看一个独立的测试模块，它包含一个`fixture`和一个使用它的测试方法：
+我们来看一个独立的测试模块，它包含一个`fixture`和一个使用它的测试用例：
 
 ```python
 # src/chapter-4/test_smtpsimple.py
@@ -441,11 +447,7 @@ def smtp_connection_yield():
         yield smtp_connection
 ```
 
-## 7.3. 使用[contextlib.ExitStack](https://docs.python.org/3/library/contextlib.html#contextlib.ExitStack)
-
-TODO：不是很能理解这个的实际功能，感觉限制很多：<https://docs.pytest.org/en/5.1.3/fixture.html#fixture-finalization-executing-teardown-code>
-
-## 7.4. 使用`addfinalizer`方法
+## 7.3. 使用`addfinalizer`方法
 `fixture`函数能够接收一个`request`的参数，表示[测试请求的上下文](#8-fixture%e5%8f%af%e4%bb%a5%e8%ae%bf%e9%97%ae%e6%b5%8b%e8%af%95%e8%af%b7%e6%b1%82%e7%9a%84%e4%b8%8a%e4%b8%8b%e6%96%87)；我们可以使用`request.addfinalizer`方法为`fixture`添加一个清理函数;
 
 例如，上面的`smtp_connection_yield`也可以这样写：
@@ -504,3 +506,539 @@ def test_163(smtp_connection_request):
 
 1 passed in 4.03s
 ```
+
+
+# 9. `fixture`返回工厂函数
+如果你需要在一个测试用例中，多次使用同一个`fixture`实例，相对于直接返回数据，更好的方法是返回一个产生数据的工厂函数；
+
+并且，对于工厂函数产生的数据，也可以在`fixture`中对其管理：
+
+```python
+@pytest.fixture
+def make_customer_record():
+
+    # 记录生产的数据
+    created_records = []
+
+    # 工厂
+    def _make_customer_record(name):
+        record = models.Customer(name=name, orders=[])
+        created_records.append(record)
+        return record
+
+    yield _make_customer_record
+
+    # 销毁数据
+    for record in created_records:
+        record.destroy()
+
+
+def test_customer_records(make_customer_record):
+    customer_1 = make_customer_record("Lisa")
+    customer_2 = make_customer_record("Mike")
+    customer_3 = make_customer_record("Meredith")
+``` 
+
+
+# 10. `fixture`的参数化
+如果你需要在一系列的测试用例的执行中，每轮执行都使用同一个`fixture`，但是有不同的依赖场景，那么可以考虑对`fixture`进行参数化；这种方式适用于对多场景的功能模块进行详尽的测试；
+
+在[8. `fixture`可以访问测试请求的上下文](#8-fixture%e5%8f%af%e4%bb%a5%e8%ae%bf%e9%97%ae%e6%b5%8b%e8%af%95%e8%af%b7%e6%b1%82%e7%9a%84%e4%b8%8a%e4%b8%8b%e6%96%87)中，我们在测试模块中指定不同`smtp_server`，得到不同的`smtp_connection`实例；
+
+现在，我们可以通过指定`params`关键字参数创建两个`fixture`实例，每个实例供一轮测试使用，所有的测试用例执行两遍；在`fixture`的声明函数中，可以使用`request.param`获取当前使用的入参；
+
+```python
+# src/chapter-4/test_request.py
+
+@pytest.fixture(scope='module', params=['smtp.163.com', "mail.python.org"])
+def smtp_connection_params(request):
+    server = request.param
+    with smtplib.SMTP(server, 587, timeout=5) as smtp_connection:
+        yield smtp_connection
+```
+
+在测试用例中使用这个`fixture`：
+
+```python
+# src/chapter-4/test_params.py
+
+def test_parames(smtp_connection_params):
+    response, _ = smtp_connection_params.ehlo()
+    assert response == 250
+```
+
+执行：
+
+```bash
+$ pipenv run pytest -q -s src/chapter-4/test_params.py 
+.断开 smtp.163.com：25
+.断开 smtp.126.com：25
+
+2 passed in 0.26s
+```
+  
+我们可以看到，这个测试用例使用不同的`SMTP`服务器，执行了两次；
+
+在参数化的`fixture`中，`pytest`为每个`fixture`实例自动指定一个测试`ID`，例如：上述示例中的`test_parames[smtp.163.com]`和`test_parames[smtp.126.com]`；
+
+使用`-k`选项执行一个指定的用例：
+
+```bash
+$ pipenv run pytest -q -s -k 163 src/chapter-4/test_params.py 
+.断开 smtp.163.com：25
+
+1 passed, 1 deselected in 0.16s
+```
+
+使用`--collect-only`可以显示这些测试`ID`，而不执行用例：
+
+```bash
+$ pipenv run pytest -q -s --collect-only src/chapter-4/test_params.py 
+src/chapter-4/test_params.py::test_parames[smtp.163.com]
+src/chapter-4/test_params.py::test_parames[smtp.126.com]
+
+no tests ran in 0.01s
+```
+
+同时，也可以使用`ids`关键字参数，自定义测试`ID`：
+
+```python
+# src/chapter-4/test_ids.py
+
+@pytest.fixture(params=[0, 1], ids=['spam', 'ham'])
+def a(request):
+    return request.param
+
+
+def test_a(a):
+    pass
+```
+
+执行`--collect-only`：
+
+```bash
+$ pipenv run pytest -q -s --collect-only src/chapter-4/test_ids.py::test_a 
+src/chapter-4/test_ids.py::test_a[spam]
+src/chapter-4/test_ids.py::test_a[ham]
+
+no tests ran in 0.01s
+```
+
+我们看到，测试`ID`为我们指定的值；
+
+数字、字符串、布尔值和`None`在测试`ID`中使用的是字符串表示形式：
+
+```python
+# src/chapter-4/test_ids.py
+
+def idfn(fixture_value):
+    if fixture_value == 0:
+        return "eggs"
+    elif fixture_value == 1:
+        return False
+    elif fixture_value == 2:
+        return None
+    else:
+        return fixture_value
+
+
+@pytest.fixture(params=[0, 1, 2, 3], ids=idfn)
+def b(request):
+    return request.param
+
+
+def test_b(b):
+    pass
+```
+
+执行`--collect-only`：
+
+```bash
+$ pipenv run pytest -q -s --collect-only src/chapter-4/test_ids.py::test_b 
+src/chapter-4/test_ids.py::test_b[eggs]
+src/chapter-4/test_ids.py::test_b[False]
+src/chapter-4/test_ids.py::test_b[2]
+src/chapter-4/test_ids.py::test_b[3]
+
+no tests ran in 0.01s
+```
+
+可以看到：
+
+- `ids`可以接收一个函数，用于生成测试`ID`；
+- 测试`ID`指定为`None`时，使用的是`params`对应的值；
+
+> 注意：
+>
+> 当测试`params`中包含元组、字典或者对象时，测试`ID`使用的是`fixture`函数名+`param`的下标：
+
+> ```python
+> # src/chapter-4/test_ids.py
+>
+> class C:
+>     pass
+>
+>
+> @pytest.fixture(params=[(1, 2), {'d': 1}, C()])
+> def c(request):
+>     return request.param
+>
+>
+> def test_c(c):
+>     pass
+> ```
+> 
+> 执行`--collect-only`：
+>
+> ```bash
+> $ pipenv run pytest -q -s --collect-only src/chapter-4/test_ids.py::test_c
+> src/chapter-4/test_ids.py::test_c[c0]
+> src/chapter-4/test_ids.py::test_c[c1]
+> src/chapter-4/test_ids.py::test_c[c2]
+>
+> no tests ran in 0.01s
+> ```
+>
+> 可以看到，测试`ID`为`fixture`的函数名（`c`）加上对应`param`的下标（从`0`开始）；
+>
+> 如果你不想这样，可以使用`str()`方法或者复写`__str__()`方法；
+
+
+# 11. 在参数化的`fixture`中标记用例
+在`fixture`的`params`参数中，可以使用`pytest.param`标记这一轮的所有用例，其用法和在`pytest.mark.parametrize`中的用法一样；
+
+```python
+# src/chapter-4/test_fixture_marks.py
+
+import pytest
+
+
+@pytest.fixture(params=[('3+5', 8),
+                        pytest.param(('6*9', 42),
+                                     marks=pytest.mark.xfail,
+                                     id='failed')])
+def data_set(request):
+    return request.param
+
+
+def test_data(data_set):
+    assert eval(data_set[0]) == data_set[1]
+```
+
+我们使用`pytest.param(('6*9', 42), marks=pytest.mark.xfail, id='failed')`的形式指定一个`request.param`入参，其中`marks`表示当用例使用这个入参时，跳过执行将用例标记为`xfail`；并且，我们还使用`id`为此时的用例指定了一个测试`ID`；
+
+```bash
+$ pipenv run pytest -v src/chapter-4/test_fixture_marks.py::test_data
+============================ test session starts ============================
+platform darwin -- Python 3.7.3, pytest-5.1.3, py-1.8.0, pluggy-0.13.0 -- /Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-EK3zIUmM/bin/python3.7
+cachedir: .pytest_cache
+rootdir: /Users/yaomeng/Private/Projects/pytest-chinese-doc
+collected 2 items                                                           
+
+src/chapter-4/test_fixture_marks.py::test_data[data_set0] PASSED      [ 50%]
+src/chapter-4/test_fixture_marks.py::test_data[failed] XFAIL          [100%]
+
+======================= 1 passed, 1 xfailed in 0.08s ========================
+```
+
+可以看到：
+- 用例结果是`XFAIL`，而不是`FAILED`；
+- 测试`ID`是我们指定的`failed`，而不是`data_set1`；
+
+
+我们也可以使用`pytest.mark.parametrize`实现相同的效果：
+
+```python
+# src/chapter-4/test_fixture_marks.py
+
+@pytest.mark.parametrize(
+    'test_input, expected',
+    [('3+5', 8),
+     pytest.param('6*9', 42, marks=pytest.mark.xfail, id='failed')])
+def test_data2(test_input, expected):
+    assert eval(test_input) == expected
+```
+
+执行：
+
+```bash
+pipenv run pytest -v src/chapter-4/test_fixture_marks.py::test_data2
+============================ test session starts ============================
+platform darwin -- Python 3.7.3, pytest-5.1.3, py-1.8.0, pluggy-0.13.0 -- /Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-EK3zIUmM/bin/python3.7
+cachedir: .pytest_cache
+rootdir: /Users/yaomeng/Private/Projects/pytest-chinese-doc
+collected 2 items                                                           
+
+src/chapter-4/test_fixture_marks.py::test_data2[3+5-8] PASSED         [ 50%]
+src/chapter-4/test_fixture_marks.py::test_data2[failed] XFAIL         [100%]
+
+======================= 1 passed, 1 xfailed in 0.07s ========================
+```
+
+
+# 12. 模块化：`fixture`使用其它的`fixture`
+你不仅仅可以在测试用例上使用`fixture`，还可以在`fixture`的声明函数中使用其它的`fixture`；这有助于模块化的设计你的`fixture`，可以在多个项目中重复使用框架级别的`fixture`；
+
+一个简单的例子，我们可以扩展之前`src/chapter-4/test_params.py`的例子，实例一个`app`对象：
+
+```python
+# src/chapter-4/test_appsetup.py
+
+import pytest
+
+
+class App:
+    def __init__(self, smtp_connection):
+        self.smtp_connection = smtp_connection
+
+
+@pytest.fixture(scope='module')
+def app(smtp_connection_params):
+    return App(smtp_connection_params)
+
+
+def test_smtp_connection_exists(app):
+    assert app.smtp_connection
+```
+
+我们创建一个`fixture app`并调用之前在`conftest.py`中定义的`fixture smtp_connection_params`，返回一个`App`的实例；
+
+执行：
+
+```bash
+$ pipenv run pytest -v src/chapter-4/test_appsetup.py 
+============================ test session starts ============================
+platform darwin -- Python 3.7.3, pytest-5.1.3, py-1.8.0, pluggy-0.13.0 -- /Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-EK3zIUmM/bin/python3.7
+cachedir: .pytest_cache
+rootdir: /Users/yaomeng/Private/Projects/pytest-chinese-doc
+collected 2 items                                                           
+
+src/chapter-4/test_appsetup.py::test_smtp_connection_exists[smtp.163.com] PASSED [ 50%]
+src/chapter-4/test_appsetup.py::test_smtp_connection_exists[smtp.126.com] PASSED [100%]
+
+============================= 2 passed in 1.25s =============================
+```
+
+因为`fixture app`使用了参数化的`smtp_connection_params`，所以测试用例`test_smtp_connection_exists`会使用不同的`App`实例执行两次，并且，`app`并不需要关心`smtp_connection_params`的实现细节；
+
+`fixture app`的作用域是**模块**级别的，它又调用了`fixture smtp_connection_params`，也是**模块**级别的，如果`smtp_connection_params`是**会话**级别的作用域，这个例子还是一样可以正常工作的；这是因为低级别的作用域可以调用高级别的作用域，但是高级别的作用域调用低级别的作用域会返回一个`ScopeMismatch`的异常；
+
+
+# 13. 高效的利用`fixture`实例
+在测试期间，`pytest`只激活最少个数的`fixture`实例；如果你拥有一个参数化的`fixture`，所有使用它的用例会在创建的第一个`fixture`实例并销毁后，才会去使用第二个实例；
+
+下面这个例子，使用了两个参数化的`fixture`，其中一个是模块级别的作用域，另一个是用例级别的作用域，并且使用`print`方法打印出它们的`setup/teardown`流程：
+
+```python
+# src/chapter-4/test_minfixture.py
+
+import pytest
+
+
+@pytest.fixture(scope="module", params=["mod1", "mod2"])
+def modarg(request):
+    param = request.param
+    print("  SETUP modarg", param)
+    yield param
+    print("  TEARDOWN modarg", param)
+
+
+@pytest.fixture(scope="function", params=[1, 2])
+def otherarg(request):
+    param = request.param
+    print("  SETUP otherarg", param)
+    yield param
+    print("  TEARDOWN otherarg", param)
+
+
+def test_0(otherarg):
+    print("  RUN test0 with otherarg", otherarg)
+
+
+def test_1(modarg):
+    print("  RUN test1 with modarg", modarg)
+
+
+def test_2(otherarg, modarg):
+    print("  RUN test2 with otherarg {} and modarg {}".format(otherarg, modarg))
+```
+
+执行：
+
+```bash
+$ pipenv run pytest -q -s src/chapter-4/test_minfixture.py 
+  SETUP otherarg 1
+  RUN test0 with otherarg 1
+.  TEARDOWN otherarg 1
+  SETUP otherarg 2
+  RUN test0 with otherarg 2
+.  TEARDOWN otherarg 2
+  SETUP modarg mod1
+  RUN test1 with modarg mod1
+.  SETUP otherarg 1
+  RUN test2 with otherarg 1 and modarg mod1
+.  TEARDOWN otherarg 1
+  SETUP otherarg 2
+  RUN test2 with otherarg 2 and modarg mod1
+.  TEARDOWN otherarg 2
+  TEARDOWN modarg mod1
+  SETUP modarg mod2
+  RUN test1 with modarg mod2
+.  SETUP otherarg 1
+  RUN test2 with otherarg 1 and modarg mod2
+.  TEARDOWN otherarg 1
+  SETUP otherarg 2
+  RUN test2 with otherarg 2 and modarg mod2
+.  TEARDOWN otherarg 2
+  TEARDOWN modarg mod2
+
+8 passed in 0.02s
+```
+
+可以看出:
+- `mod1`的`TEARDOWN`操作完成后，才开始`mod2`的`SETUP`操作；
+- 用例`test_0`独立完成测试；
+- 用例`test_1`和`test_2`都使用到了模块级别的`fixture modarg`，同时`test_2`也使用到了用例级别的`fixture otherarg`。它们执行的顺序是，`test_1`先使用`mod1`，接着`test_2`使用`mod1`和`otherarg 1/otherarg 2`，然后`test_1`使用`mod2`，最后`test_2`使用`mod2`和`otherarg 1/otherarg 2`；也就是说`test_1`和`test_2`共用相同的`modarg`实例，最少化的保留`fixture`的实例个数；
+
+
+# 14. 在类、模块和项目中使用`fixture`实例
+有时，我们并不需要在测试用例中直接使用`fixture`实例；例如，我们需要一个空的目录作为当前用例的工作目录，但是我们并不关心如何创建这个空目录；这里我们可以使用标准的[tempfile](https://docs.python.org/3/library/tempfile.html)模块来实现这个功能；
+
+```python
+# src/chapter-4/conftest.py
+
+import pytest
+import tempfile
+import os
+
+
+@pytest.fixture()
+def cleandir():
+    newpath = tempfile.mkdtemp()
+    os.chdir(newpath)
+```
+
+在测试中使用`usefixtures`标记声明使用它：
+
+```python
+# src/chapter-4/test_setenv.py
+
+import os
+import pytest
+
+
+@pytest.mark.usefixtures("cleandir")
+class TestDirectoryInit:
+    def test_cwd_starts_empty(self):
+        assert os.listdir(os.getcwd()) == []
+        with open("myfile", "w") as f:
+            f.write("hello")
+
+    def test_cwd_again_starts_empty(self):
+        assert os.listdir(os.getcwd()) == []
+```
+
+得益于`usefixtures`标记，测试类`TestDirectoryInit`中所有的测试用例都可以使用`cleandir fixture`，这和在每个测试用例中指定`cleandir`参数是一样的；
+
+执行：
+
+```bash
+$ pipenv run pytest -q -s src/chapter-4/test_setenv.py 
+..
+2 passed in 0.02s
+```
+
+你可以使用如下方式指定多个`fixture`：
+
+```python
+@pytest.mark.usefixtures("cleandir", "anotherfixture")
+def test():
+    ...
+```
+
+你也可以使用如下方式为测试模块指定`fixture`：
+
+```python
+pytestmark = pytest.mark.usefixtures("cleandir")
+```
+
+> 注意：参数的名字**必须**是`pytestmark`;
+
+你也可以使用如下方式为整个项目指定`fixture`：
+
+```ini
+# src/chapter-4/pytest.ini
+
+[pytest]
+usefixtures = cleandir
+```
+
+> 注意：
+>
+> `usefixtures`标记不适用于`fixture`声明函数；例如：
+>
+> ```python
+> @pytest.mark.usefixtures("my_other_fixture")
+> @pytest.fixture
+> def my_fixture_that_sadly_wont_use_my_other_fixture():
+>   ...
+> ```
+>
+> 这并不会返回任何的错误或告警，具体讨论可以参考[#3664](https://github.com/pytest-dev/pytest/issues/3664)
+
+
+# 自动使用`fixture`
+有时候，你想在测试中自动调用`fixture`，而不是作为参数使用或者`usefixtures`标记；设想，我们有一个数据库相关的`fixture`，包含`begin/rollback/commit`的体系结构，并且我们希望通过`begin/rollback`包裹每个测试用例；下面，通过列表实现一个虚拟的例子：
+
+```python
+# src/chapter-4/test_db_transact.py
+
+import pytest
+
+
+class DB:
+    def __init__(self):
+        self.intransaction = []
+
+    def begin(self, name):
+        self.intransaction.append(name)
+
+    def rollback(self):
+        self.intransaction.pop()
+
+
+@pytest.fixture(scope="module")
+def db():
+    return DB()
+
+
+class TestClass:
+    @pytest.fixture(autouse=True)
+    def transact(self, request, db):
+        db.begin(request.function.__name__)
+        yield
+        db.rollback()
+
+    def test_method1(self, db):
+        assert db.intransaction == ["test_method1"]
+
+    def test_method2(self, db):
+        assert db.intransaction == ["test_method2"]
+```
+
+类级别作用域的`transact`声明中标记了`autouse=True`，所以`TestClass`中的所有用例，可以自动调用`transact`而不用显式的声明或标记；
+
+执行：
+
+```bash
+$ pipenv run pytest -q -s src/chapter-4/test_db_transact.py 
+..
+2 passed in 0.01s
+```
+
+`autouse=True`的`fixture`在其它级别作用域中的工作流程:
+- `autouse fixture`遵循`scope=`关键字的定义：如果其含有`scope='session'`，则不管它在哪里定义的，都将只执行一次；`scope='class'`表示每个测试类执行一次；
+- 如果在测试模块中定义`autouse fixture`，那么这个测试模块所有的用例自动使用它；
+- 如果在`conftest.py`中定义`autouse fixture`，那么它的相同文件夹和子文件夹中的所有测试模块中的用例都将自动使用它；
+- 如果在插件中定义`autouse fixture`，那么所有安装这个插件的项目中的所有用例都将自动使用它；
+

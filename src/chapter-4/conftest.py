@@ -4,7 +4,7 @@
 Author: Luiz Yao (luizyao@163.com)
 Created Date: 2019-09-19 5:35:12
 -----
-Last Modified: 2019-09-29 17:46:42
+Last Modified: 2019-10-07 8:27:16
 Modified By: Luiz Yao (luizyao@163.com)
 -----
 THIS PROGRAM IS FREE SOFTWARE, IS LICENSED UNDER MIT.
@@ -19,8 +19,11 @@ Date      		By      		Comments
 ----------		--------		---------------------------------------------------------
 '''
 
-import pytest
+import os
 import smtplib
+import tempfile
+
+import pytest
 
 
 @pytest.fixture(scope='module')
@@ -47,3 +50,17 @@ def smtp_connection_request(request):
     with smtplib.SMTP(server, port, timeout=5) as smtp_connection:
         yield smtp_connection
         print("断开 %s：%d" % (server, port))
+
+
+@pytest.fixture(scope='module', params=['smtp.163.com', 'smtp.126.com'])
+def smtp_connection_params(request):
+    server = request.param
+    with smtplib.SMTP(server, 25, timeout=5) as smtp_connection:
+        yield smtp_connection
+        print("断开 %s：%d" % (server, 25))
+
+
+@pytest.fixture()
+def cleandir():
+    newpath = tempfile.mkdtemp()
+    os.chdir(newpath)
