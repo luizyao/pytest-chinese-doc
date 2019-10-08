@@ -1,39 +1,40 @@
-<!-- TOC -->
-
-- [1. `fixture`：作为形参使用](#1-fixture%e4%bd%9c%e4%b8%ba%e5%bd%a2%e5%8f%82%e4%bd%bf%e7%94%a8)
-- [2. `fixture`：一个典型的依赖注入的实践](#2-fixture%e4%b8%80%e4%b8%aa%e5%85%b8%e5%9e%8b%e7%9a%84%e4%be%9d%e8%b5%96%e6%b3%a8%e5%85%a5%e7%9a%84%e5%ae%9e%e8%b7%b5)
-- [3. `conftest.py`：共享`fixture`实例](#3-conftestpy%e5%85%b1%e4%ba%abfixture%e5%ae%9e%e4%be%8b)
-- [4. 共享测试数据](#4-%e5%85%b1%e4%ba%ab%e6%b5%8b%e8%af%95%e6%95%b0%e6%8d%ae)
-- [5. 作用域：在跨类的、模块的或整个测试会话的用例中，共享`fixture`实例](#5-%e4%bd%9c%e7%94%a8%e5%9f%9f%e5%9c%a8%e8%b7%a8%e7%b1%bb%e7%9a%84%e6%a8%a1%e5%9d%97%e7%9a%84%e6%88%96%e6%95%b4%e4%b8%aa%e6%b5%8b%e8%af%95%e4%bc%9a%e8%af%9d%e7%9a%84%e7%94%a8%e4%be%8b%e4%b8%ad%e5%85%b1%e4%ba%abfixture%e5%ae%9e%e4%be%8b)
-  - [5.1. `package`作用域（实验性的）](#51-package%e4%bd%9c%e7%94%a8%e5%9f%9f%e5%ae%9e%e9%aa%8c%e6%80%a7%e7%9a%84)
-- [6. `fixture`的实例化顺序](#6-fixture%e7%9a%84%e5%ae%9e%e4%be%8b%e5%8c%96%e9%a1%ba%e5%ba%8f)
-- [7. `fixture`的清理操作](#7-fixture%e7%9a%84%e6%b8%85%e7%90%86%e6%93%8d%e4%bd%9c)
-  - [7.1. 使用`yield`代替`return`](#71-%e4%bd%bf%e7%94%a8yield%e4%bb%a3%e6%9b%bfreturn)
-  - [7.2. 使用`with`写法](#72-%e4%bd%bf%e7%94%a8with%e5%86%99%e6%b3%95)
-  - [7.3. 使用`addfinalizer`方法](#73-%e4%bd%bf%e7%94%a8addfinalizer%e6%96%b9%e6%b3%95)
-- [8. `fixture`可以访问测试请求的上下文](#8-fixture%e5%8f%af%e4%bb%a5%e8%ae%bf%e9%97%ae%e6%b5%8b%e8%af%95%e8%af%b7%e6%b1%82%e7%9a%84%e4%b8%8a%e4%b8%8b%e6%96%87)
-- [9. `fixture`返回工厂函数](#9-fixture%e8%bf%94%e5%9b%9e%e5%b7%a5%e5%8e%82%e5%87%bd%e6%95%b0)
-- [10. `fixture`的参数化](#10-fixture%e7%9a%84%e5%8f%82%e6%95%b0%e5%8c%96)
-- [11. 在参数化的`fixture`中标记用例](#11-%e5%9c%a8%e5%8f%82%e6%95%b0%e5%8c%96%e7%9a%84fixture%e4%b8%ad%e6%a0%87%e8%ae%b0%e7%94%a8%e4%be%8b)
-- [12. 模块化：`fixture`使用其它的`fixture`](#12-%e6%a8%a1%e5%9d%97%e5%8c%96fixture%e4%bd%bf%e7%94%a8%e5%85%b6%e5%ae%83%e7%9a%84fixture)
-- [13. 高效的利用`fixture`实例](#13-%e9%ab%98%e6%95%88%e7%9a%84%e5%88%a9%e7%94%a8fixture%e5%ae%9e%e4%be%8b)
-- [14. 在类、模块和项目中使用`fixture`实例](#14-%e5%9c%a8%e7%b1%bb%e6%a8%a1%e5%9d%97%e5%92%8c%e9%a1%b9%e7%9b%ae%e4%b8%ad%e4%bd%bf%e7%94%a8fixture%e5%ae%9e%e4%be%8b)
-- [自动使用`fixture`](#%e8%87%aa%e5%8a%a8%e4%bd%bf%e7%94%a8fixture)
-
-<!-- /TOC -->
+- [1. `fixture`：作为形参使用](#1-fixture作为形参使用)
+- [2. `fixture`：一个典型的依赖注入的实践](#2-fixture一个典型的依赖注入的实践)
+- [3. `conftest.py`：共享`fixture`实例](#3-conftestpy共享fixture实例)
+- [4. 共享测试数据](#4-共享测试数据)
+- [5. 作用域：在跨类的、模块的或整个测试会话的用例中，共享`fixture`实例](#5-作用域在跨类的模块的或整个测试会话的用例中共享fixture实例)
+  - [5.1. `package`作用域（实验性的）](#51-package作用域实验性的)
+- [6. `fixture`的实例化顺序](#6-fixture的实例化顺序)
+- [7. `fixture`的清理操作](#7-fixture的清理操作)
+  - [7.1. 使用`yield`代替`return`](#71-使用yield代替return)
+  - [7.2. 使用`with`写法](#72-使用with写法)
+  - [7.3. 使用`addfinalizer`方法](#73-使用addfinalizer方法)
+- [8. `fixture`可以访问测试请求的上下文](#8-fixture可以访问测试请求的上下文)
+- [9. `fixture`返回工厂函数](#9-fixture返回工厂函数)
+- [10. `fixture`的参数化](#10-fixture的参数化)
+- [11. 在参数化的`fixture`中标记用例](#11-在参数化的fixture中标记用例)
+- [12. 模块化：`fixture`使用其它的`fixture`](#12-模块化fixture使用其它的fixture)
+- [13. 高效的利用`fixture`实例](#13-高效的利用fixture实例)
+- [14. 在类、模块和项目中使用`fixture`实例](#14-在类模块和项目中使用fixture实例)
+- [15. 自动使用`fixture`](#15-自动使用fixture)
+- [16. 在不同的层级上覆写`fixture`](#16-在不同的层级上覆写fixture)
+  - [16.1. 在文件夹（`conftest.py`）层级覆写`fixture`](#161-在文件夹conftestpy层级覆写fixture)
+  - [16.2. 在模块层级覆写`fixture`](#162-在模块层级覆写fixture)
+  - [16.3. 在用例参数中覆写`fixture`](#163-在用例参数中覆写fixture)
+  - [16.4. 参数化的`fixture`覆写非参数化的`fixture`，反之亦然](#164-参数化的fixture覆写非参数化的fixture反之亦然)
 
 `pytest fixture`的目的是提供一个固定的基线，使测试可以在此基础上可靠地、重复地执行；
 
 对比`xUnit`经典的`setup/teardown`形式，`pytest fixture`在以下方面有了明显的改进：
 
 - 每个`fixture`都拥有一个确定的名字，使其能够在函数、类、模块，甚至整个测试会话中去使用；
-- `fixture`以模块化的方式实现。因为每一个`fixture`的名字都能触发一个**fixture函数**，而这个函数本身又能调用其它的`fixture`；
+- `fixture`以模块化的方式组织。因为每一个`fixture`的名字都能触发一个**fixture函数**，而这个函数本身又能调用其它的`fixture`；
 - `fixture`的管理从简单的单元测试扩展到复杂的功能测试，允许通过配置和组件化的选项参数化`fixture`和测试，或者跨功能、类、模块，甚至整个测试会话中复用`fixture`；
 
 此外，`pytest`继续支持经典的`xUnit`风格的测试。你可以根据自己的喜好，混合使用两种风格，或者逐渐过渡到新的风格。你也可以从已有的`unittest.TestCase`或者`nose`项目中执行测试；
 
 
-# 1. `fixture`：作为形参使用
+## 1. `fixture`：作为形参使用
 测试函数可以接收`fixture`的名字作为入参，其实参是对应的`fixture`函数的返回值。通过`@pytest.fixture`装饰器可以注册一个`fixture`函数；
 
 我们来看一个独立的测试模块，它包含一个`fixture`和一个使用它的测试用例：
@@ -113,7 +114,7 @@ E       fixture 'smtp_connectio' not found
 > 但是，对于`_`开头的`fixture`，需要加上`-v`选项；
 
 
-# 2. `fixture`：一个典型的依赖注入的实践
+## 2. `fixture`：一个典型的依赖注入的实践
 `fixture`允许测试用例可以轻松的接收和处理特定的需要预初始化操作的应用对象，而不用过分关心**导入/设置/清理**的细节；它是一个典型的依赖注入的实践，其中，`fixture`扮演者注入者（`injector`）的角色，而测试用例扮演者消费者（`client`）的角色；
 
 以上一章的例子来说明：`test_ehlo`测试用例需要一个`smtp_connection`的连接对象来做测试，它只关心这个连接是否有效和可达，却不关心它的创建过程。`smtp_connection`对`test_ehlo`来说，就是一个需要预初始化操作的应用对象，而这个预处理操作是在fixture中完成的；简而言之，`test_ehlo`说：“我需要一个`SMTP`连接对象。”，然后，`pytest`就给了它一个，就这么简单。
@@ -127,20 +128,20 @@ E       fixture 'smtp_connectio' not found
 > 更详细的资料可以看看维基百科 [Dependency injection](https://encyclopedia.thefreedictionary.com/Dependency+injection)；
 
 
-# 3. `conftest.py`：共享`fixture`实例
+## 3. `conftest.py`：共享`fixture`实例
 如果你想在多个测试模块中共享同一个`fixture`实例，那么你可以把这个`fixture`函数移动到`conftest.py`文件中。并且，你不需要手动的导入它，`pytest`会自动发现，查找的顺序是：测试类、测试模块、`conftest.py`、最后是内置和第三方的插件；
 
 你还可以利用`conftest.py`文件的这个特性[为每个目录实现一个本地化的插件](http://pytest.org/en/latest/writing_plugins.html#conftest-py-plugins)；
 
 
-# 4. 共享测试数据
+## 4. 共享测试数据
 如果你想多个测试共享同样的测试数据文件，我们有两个好方法实现这个：
 
 - 把这些数据加载到`fixture`中，测试中再使用这些`fixture`；
 - 把这些数据文件放到`tests`文件夹中，一些第三方的插件能帮助你管理这方面的测试，例如：[pytest-datadir](https://pypi.org/project/pytest-datadir/)和[pytest-datafiles](https://pypi.org/project/pytest-datafiles/)；
 
 
-# 5. 作用域：在跨类的、模块的或整个测试会话的用例中，共享`fixture`实例
+## 5. 作用域：在跨类的、模块的或整个测试会话的用例中，共享`fixture`实例
 需要使用到网络接入的`fixture`往往依赖于网络的连通性，并且创建过程一般都非常耗时；
 
 我们来扩展一下上述示例（*src/chapter-4/test_smtpsimple.py*）：在`@pytest.fixture`装饰器中添加`scope='module'`参数，使每个**测试模块**只调用一次`smtp_connection fixture`（默认每个**测试用例**都会调用一次），这样模块中的每个测试用例将会共享同一个`fixture`实例；其中，`scope`参数可能的值都有：`function`（默认值）、`class`、`module`、`package`和`session`；
@@ -228,7 +229,7 @@ def smtp_connection():
 > 
 > `pytest`每次只缓存一个`fixture`实例，当使用参数化的`fixture`时，`pytest`可能会在声明的作用域内多次调用这个`fixture`；
 
-## 5.1. `package`作用域（实验性的）
+### 5.1. `package`作用域（实验性的）
 在 pytest 3.7 的版本中，正式引入了`package`作用域。
 
 `package`作用域的`fixture`会作用于包内的每一个测试用例：
@@ -326,7 +327,7 @@ src/chapter-4/package_expr/test_module2.py:26: AssertionError
 > - 这个功能标记为**实验性的**，如果在其实际应用中发现严重的`bug`，那么这个功能很可能被移除；
 
 
-# 6. `fixture`的实例化顺序
+## 6. `fixture`的实例化顺序
 多个`fixture`的实例化顺序，遵循以下原则：
 
 - 高级别作用域的（例如：`session`）先于低级别的作用域的（例如：`class`或者`function`）
@@ -380,6 +381,7 @@ def test_order(f1, m1, f2, s1):
 - `s1`拥有最高级的作用域（`session`），即使在测试用例`test_order`中最后被声明，它也是第一个被实例化的（参照第一条原则）
 - `m1`拥有仅次于`session`级别的作用域（`module`），所以它是第二个被实例化的（参照第一条原则）
 - `f1 f2 f3 a1`同属于`function`级别的作用域：
+
   - 从`test_order(f1, m1, f2, s1)`形参的声明顺序中，可以看出，`f1`比`f2`先实例化（参照第二条原则）
   - `f1`的定义中又显式的调用了`f3`，所以`f3`比`f1`先实例化（参照第二条原则）
   - `a1`的定义中使能了`autouse`标记，所以它会在同级别的`fixture`之前实例化，这里也就是在`f3 f1 f2`之前实例化（参照第三条原则）
@@ -392,12 +394,12 @@ def test_order(f1, m1, f2, s1):
 > - 多个相同作用域的`autouse fixture`，其调用顺序遵循`fixture`函数名的顺序
 
 
-# 7. `fixture`的清理操作
+## 7. `fixture`的清理操作
 我们期望在`fixture`退出作用域之前，执行某些清理性操作（例如，关闭服务器的连接等）；
 
 我们有以下几种形式，实现这个功能：
 
-## 7.1. 使用`yield`代替`return`
+### 7.1. 使用`yield`代替`return`
 将`fixture`函数中的`return`关键字替换成`yield`，则`yield`之后的代码，就是我们要的清理操作；
 
 我们来声明一个包含清理操作的`smtp_connection fixture`：
@@ -435,7 +437,7 @@ F关闭SMTP连接
 
 我们可以看到在`test_ehlo_yield`执行完后，又执行了`yield`后面的代码；
 
-## 7.2. 使用`with`写法
+### 7.2. 使用`with`写法
 对于支持`with`写法的对象，我们也可以隐式的执行它的清理操作；
 
 例如，上面的`smtp_connection_yield`也可以这样写：
@@ -447,8 +449,8 @@ def smtp_connection_yield():
         yield smtp_connection
 ```
 
-## 7.3. 使用`addfinalizer`方法
-`fixture`函数能够接收一个`request`的参数，表示[测试请求的上下文](#8-fixture%e5%8f%af%e4%bb%a5%e8%ae%bf%e9%97%ae%e6%b5%8b%e8%af%95%e8%af%b7%e6%b1%82%e7%9a%84%e4%b8%8a%e4%b8%8b%e6%96%87)；我们可以使用`request.addfinalizer`方法为`fixture`添加一个清理函数;
+### 7.3. 使用`addfinalizer`方法
+`fixture`函数能够接收一个`request`的参数，表示[测试请求的上下文](#8-fixture可以访问测试请求的上下文)；我们可以使用`request.addfinalizer`方法为`fixture`添加一个清理函数;
 
 例如，上面的`smtp_connection_yield`也可以这样写：
 
@@ -469,7 +471,7 @@ def smtp_connection_fin(request):
 > 在`yield`之前或者`addfinalizer`注册之前代码发生错误退出的，都不会再执行后续的清理操作
 
 
-# 8. `fixture`可以访问测试请求的上下文
+## 8. `fixture`可以访问测试请求的上下文
 `fixture`函数可以接收一个`request`的参数，表示测试用例、类、模块，甚至测试会话的上下文环境；
 
 我们可以扩展上面的`smtp_connection_yield fixture`，让其根据不同的测试模块使用不同的服务器：
@@ -508,7 +510,7 @@ def test_163(smtp_connection_request):
 ```
 
 
-# 9. `fixture`返回工厂函数
+## 9. `fixture`返回工厂函数
 如果你需要在一个测试用例中，多次使用同一个`fixture`实例，相对于直接返回数据，更好的方法是返回一个产生数据的工厂函数；
 
 并且，对于工厂函数产生的数据，也可以在`fixture`中对其管理：
@@ -540,10 +542,10 @@ def test_customer_records(make_customer_record):
 ``` 
 
 
-# 10. `fixture`的参数化
+## 10. `fixture`的参数化
 如果你需要在一系列的测试用例的执行中，每轮执行都使用同一个`fixture`，但是有不同的依赖场景，那么可以考虑对`fixture`进行参数化；这种方式适用于对多场景的功能模块进行详尽的测试；
 
-在[8. `fixture`可以访问测试请求的上下文](#8-fixture%e5%8f%af%e4%bb%a5%e8%ae%bf%e9%97%ae%e6%b5%8b%e8%af%95%e8%af%b7%e6%b1%82%e7%9a%84%e4%b8%8a%e4%b8%8b%e6%96%87)中，我们在测试模块中指定不同`smtp_server`，得到不同的`smtp_connection`实例；
+在[fixture可以访问测试请求的上下文](#8-fixture可以访问测试请求的上下文)中，我们在测试模块中指定不同`smtp_server`，得到不同的`smtp_connection`实例；
 
 现在，我们可以通过指定`params`关键字参数创建两个`fixture`实例，每个实例供一轮测试使用，所有的测试用例执行两遍；在`fixture`的声明函数中，可以使用`request.param`获取当前使用的入参；
 
@@ -704,7 +706,7 @@ no tests ran in 0.01s
 > 如果你不想这样，可以使用`str()`方法或者复写`__str__()`方法；
 
 
-# 11. 在参数化的`fixture`中标记用例
+## 11. 在参数化的`fixture`中标记用例
 在`fixture`的`params`参数中，可以使用`pytest.param`标记这一轮的所有用例，其用法和在`pytest.mark.parametrize`中的用法一样；
 
 ```python
@@ -742,6 +744,7 @@ src/chapter-4/test_fixture_marks.py::test_data[failed] XFAIL          [100%]
 ```
 
 可以看到：
+
 - 用例结果是`XFAIL`，而不是`FAILED`；
 - 测试`ID`是我们指定的`failed`，而不是`data_set1`；
 
@@ -776,7 +779,7 @@ src/chapter-4/test_fixture_marks.py::test_data2[failed] XFAIL         [100%]
 ```
 
 
-# 12. 模块化：`fixture`使用其它的`fixture`
+## 12. 模块化：`fixture`使用其它的`fixture`
 你不仅仅可以在测试用例上使用`fixture`，还可以在`fixture`的声明函数中使用其它的`fixture`；这有助于模块化的设计你的`fixture`，可以在多个项目中重复使用框架级别的`fixture`；
 
 一个简单的例子，我们可以扩展之前`src/chapter-4/test_params.py`的例子，实例一个`app`对象：
@@ -824,7 +827,7 @@ src/chapter-4/test_appsetup.py::test_smtp_connection_exists[smtp.126.com] PASSED
 `fixture app`的作用域是**模块**级别的，它又调用了`fixture smtp_connection_params`，也是**模块**级别的，如果`smtp_connection_params`是**会话**级别的作用域，这个例子还是一样可以正常工作的；这是因为低级别的作用域可以调用高级别的作用域，但是高级别的作用域调用低级别的作用域会返回一个`ScopeMismatch`的异常；
 
 
-# 13. 高效的利用`fixture`实例
+## 13. 高效的利用`fixture`实例
 在测试期间，`pytest`只激活最少个数的`fixture`实例；如果你拥有一个参数化的`fixture`，所有使用它的用例会在创建的第一个`fixture`实例并销毁后，才会去使用第二个实例；
 
 下面这个例子，使用了两个参数化的`fixture`，其中一个是模块级别的作用域，另一个是用例级别的作用域，并且使用`print`方法打印出它们的`setup/teardown`流程：
@@ -896,12 +899,13 @@ $ pipenv run pytest -q -s src/chapter-4/test_minfixture.py
 ```
 
 可以看出:
+
 - `mod1`的`TEARDOWN`操作完成后，才开始`mod2`的`SETUP`操作；
 - 用例`test_0`独立完成测试；
 - 用例`test_1`和`test_2`都使用到了模块级别的`fixture modarg`，同时`test_2`也使用到了用例级别的`fixture otherarg`。它们执行的顺序是，`test_1`先使用`mod1`，接着`test_2`使用`mod1`和`otherarg 1/otherarg 2`，然后`test_1`使用`mod2`，最后`test_2`使用`mod2`和`otherarg 1/otherarg 2`；也就是说`test_1`和`test_2`共用相同的`modarg`实例，最少化的保留`fixture`的实例个数；
 
 
-# 14. 在类、模块和项目中使用`fixture`实例
+## 14. 在类、模块和项目中使用`fixture`实例
 有时，我们并不需要在测试用例中直接使用`fixture`实例；例如，我们需要一个空的目录作为当前用例的工作目录，但是我们并不关心如何创建这个空目录；这里我们可以使用标准的[tempfile](https://docs.python.org/3/library/tempfile.html)模块来实现这个功能；
 
 ```python
@@ -987,8 +991,10 @@ usefixtures = cleandir
 > 这并不会返回任何的错误或告警，具体讨论可以参考[#3664](https://github.com/pytest-dev/pytest/issues/3664)
 
 
-# 自动使用`fixture`
-有时候，你想在测试中自动调用`fixture`，而不是作为参数使用或者`usefixtures`标记；设想，我们有一个数据库相关的`fixture`，包含`begin/rollback/commit`的体系结构，并且我们希望通过`begin/rollback`包裹每个测试用例；下面，通过列表实现一个虚拟的例子：
+## 15. 自动使用`fixture`
+有时候，你想在测试用例中自动使用`fixture`，而不是作为参数使用或者`usefixtures`标记；设想，我们有一个数据库相关的`fixture`，包含`begin/rollback/commit`的体系结构，现在我们希望通过`begin/rollback`包裹每个测试用例；
+
+下面，通过列表实现一个虚拟的例子：
 
 ```python
 # src/chapter-4/test_db_transact.py
@@ -1026,7 +1032,7 @@ class TestClass:
         assert db.intransaction == ["test_method2"]
 ```
 
-类级别作用域的`transact`声明中标记了`autouse=True`，所以`TestClass`中的所有用例，可以自动调用`transact`而不用显式的声明或标记；
+**类级别作用域**的`fixture transact`函数中声明了`autouse=True`，所以`TestClass`中的所有用例，可以自动调用`transact`而不用显式的声明或标记；
 
 执行：
 
@@ -1036,9 +1042,206 @@ $ pipenv run pytest -q -s src/chapter-4/test_db_transact.py
 2 passed in 0.01s
 ```
 
-`autouse=True`的`fixture`在其它级别作用域中的工作流程:
+`autouse=True`的`fixture`在其它级别作用域中的工作流程：
+
 - `autouse fixture`遵循`scope=`关键字的定义：如果其含有`scope='session'`，则不管它在哪里定义的，都将只执行一次；`scope='class'`表示每个测试类执行一次；
 - 如果在测试模块中定义`autouse fixture`，那么这个测试模块所有的用例自动使用它；
 - 如果在`conftest.py`中定义`autouse fixture`，那么它的相同文件夹和子文件夹中的所有测试模块中的用例都将自动使用它；
 - 如果在插件中定义`autouse fixture`，那么所有安装这个插件的项目中的所有用例都将自动使用它；
 
+上述的示例中，我们期望只有`TestClass`的用例自动调用`fixture transact`，这样我们就不希望`transact`一直处于**激活**的状态，所以更标准的做法是，将`transact`声明在`conftest.py`中，而不用`autouse=True`：
+
+```python
+@pytest.fixture
+def transact(request, db):
+    db.begin()
+    yield
+    db.rollback()
+```
+
+并且，在`TestClass`上声明：
+
+```python
+@pytest.mark.usefixtures("transact")
+class TestClass:
+    def test_method1(self):
+        ...
+```
+
+其它类或者用例也想使用的话，同样需要显式的声明`usefixtures`；
+
+
+## 16. 在不同的层级上覆写`fixture`
+在大型的测试中，你可能需要在本地覆盖项目级别的`fixture`，以增加可读性和便于维护；
+
+### 16.1. 在文件夹（`conftest.py`）层级覆写`fixture`
+假设我们有如下的测试项目：
+
+```python
+tests/
+    __init__.py
+
+    conftest.py
+        # content of tests/conftest.py
+        import pytest
+
+        @pytest.fixture
+        def username():
+            return 'username'
+
+    test_something.py
+        # content of tests/test_something.py
+        def test_username(username):
+            assert username == 'username'
+
+    subfolder/
+        __init__.py
+
+        conftest.py
+            # content of tests/subfolder/conftest.py
+            import pytest
+
+            @pytest.fixture
+            def username(username):
+                return 'overridden-' + username
+
+        test_something.py
+            # content of tests/subfolder/test_something.py
+            def test_username(username):
+                assert username == 'overridden-username'
+```
+
+可以看到：
+
+- 子文件夹中的`fixture`覆盖了上层文件夹中同名的`fixture`；
+- 子文件夹中的`fixture`可以轻松的访问上层文件夹中同名的`fixture`；
+
+### 16.2. 在模块层级覆写`fixture`
+假设我们有如下的测试项目：
+
+```python
+tests/
+    __init__.py
+
+    conftest.py
+        # content of tests/conftest.py
+        import pytest
+
+        @pytest.fixture
+        def username():
+            return 'username'
+
+    test_something.py
+        # content of tests/test_something.py
+        import pytest
+
+        @pytest.fixture
+        def username(username):
+            return 'overridden-' + username
+
+        def test_username(username):
+            assert username == 'overridden-username'
+
+    test_something_else.py
+        # content of tests/test_something_else.py
+        import pytest
+
+        @pytest.fixture
+        def username(username):
+            return 'overridden-else-' + username
+
+        def test_username(username):
+            assert username == 'overridden-else-username'
+```
+
+可以看到：
+
+- 模块中的`fixture`覆盖了`conftest.py`中同名的`fixture`；
+- 模块中的`fixture`可以轻松的访问`conftest.py`中同名的`fixture`；
+
+### 16.3. 在用例参数中覆写`fixture`
+假设我们有如下的测试项目：
+
+```python
+tests/
+    __init__.py
+
+    conftest.py
+        # content of tests/conftest.py
+        import pytest
+
+        @pytest.fixture
+        def username():
+            return 'username'
+
+        @pytest.fixture
+        def other_username(username):
+            return 'other-' + username
+
+    test_something.py
+        # content of tests/test_something.py
+        import pytest
+
+        @pytest.mark.parametrize('username', ['directly-overridden-username'])
+        def test_username(username):
+            assert username == 'directly-overridden-username'
+
+        @pytest.mark.parametrize('username', ['directly-overridden-username-other'])
+        def test_username_other(other_username):
+            assert other_username == 'other-directly-overridden-username-other'
+```
+
+可以看到：
+
+- `fixture`的值被用例的参数所覆盖；
+- 尽管用例`test_username_other`没有使用`fixture username`，但是`fixture other_username`使用到了`fixture username`，所以也同样受到了影响；
+
+### 16.4. 参数化的`fixture`覆写非参数化的`fixture`，反之亦然
+
+```python
+tests/
+    __init__.py
+
+    conftest.py
+        # content of tests/conftest.py
+        import pytest
+
+        @pytest.fixture(params=['one', 'two', 'three'])
+        def parametrized_username(request):
+            return request.param
+
+        @pytest.fixture
+        def non_parametrized_username(request):
+            return 'username'
+
+    test_something.py
+        # content of tests/test_something.py
+        import pytest
+
+        @pytest.fixture
+        def parametrized_username():
+            return 'overridden-username'
+
+        @pytest.fixture(params=['one', 'two', 'three'])
+        def non_parametrized_username(request):
+            return request.param
+
+        def test_username(parametrized_username):
+            assert parametrized_username == 'overridden-username'
+
+        def test_parametrized_username(non_parametrized_username):
+            assert non_parametrized_username in ['one', 'two', 'three']
+
+    test_something_else.py
+        # content of tests/test_something_else.py
+        def test_username(parametrized_username):
+            assert parametrized_username in ['one', 'two', 'three']
+
+        def test_username(non_parametrized_username):
+            assert non_parametrized_username == 'username'
+```
+
+可以看出：
+
+- 参数化的`fixture`和非参数化的`fixture`同样可以相互覆盖；
+- 在模块层级上的覆盖不会影响其它模块；
