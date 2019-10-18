@@ -29,6 +29,7 @@
 - [2、使用和调用](docs/2、使用和调用.md)
 - [3、编写断言](docs/3、编写断言.md)
 - [4、pytest-fixtures：明确的、模块化的和可扩展的](docs/4、pytest-fixtures：明确的、模块化的和可扩展的.md)
+- [5、猴子补丁](docs/5、猴子补丁.md)
 
 # TODO
 - [ ] 阅读`pytest`源码
