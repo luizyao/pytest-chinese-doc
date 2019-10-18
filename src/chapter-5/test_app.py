@@ -4,7 +4,7 @@
 Author: Luiz Yao (luizyao@163.com)
 Created Date: 2019-10-10 17:03:27
 -----
-Last Modified: 2019-10-10 17:34:43
+Last Modified: 2019-10-14 16:39:42
 Modified By: Luiz Yao (luizyao@163.com)
 -----
 THIS PROGRAM IS FREE SOFTWARE, IS LICENSED UNDER MIT.
@@ -20,6 +20,8 @@ Date      		By      		Comments
 '''
 
 from urllib import request
+
+import pytest
 
 from app import get
 
@@ -44,11 +46,8 @@ def test_get(monkeypatch):
     assert data == 'luizyao.com'
 
 
-import pytest
-
-
 # monkeypatch 是 function 级别作用域的，所以 mock_response 也只能是 function 级别，
-# 否则会报 ScopeMismatch: You tried to access the 'function' scoped fixture 'monkeypatch' with a 'module' scoped request object 
+# 否则会报 ScopeMismatch: You tried to access the 'function' scoped fixture 'monkeypatch' with a 'module' scoped request object
 @pytest.fixture
 def mock_response(monkeypatch):
     def mock_urlopen(*args, **kwargs):
@@ -66,5 +65,15 @@ def test_get_fixture1(mock_response):
 
 # 使用 mock_response 代替原先的 monkeypatch
 def test_get_fixture2(mock_response):
+    data = get('https://bing.com')
+    assert data == 'luizyao.com'
+
+
+@pytest.fixture
+def no_request(monkeypatch):
+    monkeypatch.delattr('urllib.request.urlopen')
+
+
+def test_delattr(no_request):
     data = get('https://bing.com')
     assert data == 'luizyao.com'
