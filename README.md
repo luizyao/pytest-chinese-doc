@@ -14,7 +14,7 @@
 
 
 # 使用
-- `git clone`仓库到本地：
+- `git clone git@github.com:luizyao/pytest-chinese-doc.git`仓库：
 
   `docs/`目录下包含所有的文章，以[markdown](https://daringfireball.net/projects/markdown/)格式编写；
 
@@ -31,7 +31,8 @@
 - [4、fixtures：明确的、模块化的和可扩展的](docs/4、fixtures：明确的、模块化的和可扩展的.md)
 - [5、猴子补丁](docs/5、猴子补丁.md)
 - [6、临时目录和文件](docs/6、临时目录和文件.md)
-- [7、捕获标准输出和标准错误输出](docs\7、捕获标准输出和标准错误输出.md)
+- [7、捕获标准输出和标准错误输出](docs/7、捕获标准输出和标准错误输出.md)
+- [8、捕获告警信息](docs/8、捕获告警信息.md)
 
 # TODO
 - [ ] 阅读`pytest`源码
