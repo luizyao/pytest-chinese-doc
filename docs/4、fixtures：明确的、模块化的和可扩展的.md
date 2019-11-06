@@ -1,27 +1,27 @@
-- [1. `fixture`：作为形参使用](#1-fixture%e4%bd%9c%e4%b8%ba%e5%bd%a2%e5%8f%82%e4%bd%bf%e7%94%a8)
-- [2. `fixture`：一个典型的依赖注入的实践](#2-fixture%e4%b8%80%e4%b8%aa%e5%85%b8%e5%9e%8b%e7%9a%84%e4%be%9d%e8%b5%96%e6%b3%a8%e5%85%a5%e7%9a%84%e5%ae%9e%e8%b7%b5)
-- [3. `conftest.py`：共享`fixture`实例](#3-conftestpy%e5%85%b1%e4%ba%abfixture%e5%ae%9e%e4%be%8b)
-- [4. 共享测试数据](#4-%e5%85%b1%e4%ba%ab%e6%b5%8b%e8%af%95%e6%95%b0%e6%8d%ae)
-- [5. 作用域：在跨类的、模块的或整个测试会话的用例中，共享`fixture`实例](#5-%e4%bd%9c%e7%94%a8%e5%9f%9f%e5%9c%a8%e8%b7%a8%e7%b1%bb%e7%9a%84%e6%a8%a1%e5%9d%97%e7%9a%84%e6%88%96%e6%95%b4%e4%b8%aa%e6%b5%8b%e8%af%95%e4%bc%9a%e8%af%9d%e7%9a%84%e7%94%a8%e4%be%8b%e4%b8%ad%e5%85%b1%e4%ba%abfixture%e5%ae%9e%e4%be%8b)
-  - [5.1. `package`作用域（实验性的）](#51-package%e4%bd%9c%e7%94%a8%e5%9f%9f%e5%ae%9e%e9%aa%8c%e6%80%a7%e7%9a%84)
-- [6. `fixture`的实例化顺序](#6-fixture%e7%9a%84%e5%ae%9e%e4%be%8b%e5%8c%96%e9%a1%ba%e5%ba%8f)
-- [7. `fixture`的清理操作](#7-fixture%e7%9a%84%e6%b8%85%e7%90%86%e6%93%8d%e4%bd%9c)
-  - [7.1. 使用`yield`代替`return`](#71-%e4%bd%bf%e7%94%a8yield%e4%bb%a3%e6%9b%bfreturn)
-  - [7.2. 使用`with`写法](#72-%e4%bd%bf%e7%94%a8with%e5%86%99%e6%b3%95)
-  - [7.3. 使用`addfinalizer`方法](#73-%e4%bd%bf%e7%94%a8addfinalizer%e6%96%b9%e6%b3%95)
-- [8. `fixture`可以访问测试请求的上下文](#8-fixture%e5%8f%af%e4%bb%a5%e8%ae%bf%e9%97%ae%e6%b5%8b%e8%af%95%e8%af%b7%e6%b1%82%e7%9a%84%e4%b8%8a%e4%b8%8b%e6%96%87)
-- [9. `fixture`返回工厂函数](#9-fixture%e8%bf%94%e5%9b%9e%e5%b7%a5%e5%8e%82%e5%87%bd%e6%95%b0)
-- [10. `fixture`的参数化](#10-fixture%e7%9a%84%e5%8f%82%e6%95%b0%e5%8c%96)
-- [11. 在参数化的`fixture`中标记用例](#11-%e5%9c%a8%e5%8f%82%e6%95%b0%e5%8c%96%e7%9a%84fixture%e4%b8%ad%e6%a0%87%e8%ae%b0%e7%94%a8%e4%be%8b)
-- [12. 模块化：`fixture`使用其它的`fixture`](#12-%e6%a8%a1%e5%9d%97%e5%8c%96fixture%e4%bd%bf%e7%94%a8%e5%85%b6%e5%ae%83%e7%9a%84fixture)
-- [13. 高效的利用`fixture`实例](#13-%e9%ab%98%e6%95%88%e7%9a%84%e5%88%a9%e7%94%a8fixture%e5%ae%9e%e4%be%8b)
-- [14. 在类、模块和项目级别上使用`fixture`实例](#14-%e5%9c%a8%e7%b1%bb%e6%a8%a1%e5%9d%97%e5%92%8c%e9%a1%b9%e7%9b%ae%e7%ba%a7%e5%88%ab%e4%b8%8a%e4%bd%bf%e7%94%a8fixture%e5%ae%9e%e4%be%8b)
-- [15. 自动使用`fixture`](#15-%e8%87%aa%e5%8a%a8%e4%bd%bf%e7%94%a8fixture)
-- [16. 在不同的层级上覆写`fixture`](#16-%e5%9c%a8%e4%b8%8d%e5%90%8c%e7%9a%84%e5%b1%82%e7%ba%a7%e4%b8%8a%e8%a6%86%e5%86%99fixture)
-  - [16.1. 在文件夹（`conftest.py`）层级覆写`fixture`](#161-%e5%9c%a8%e6%96%87%e4%bb%b6%e5%a4%b9conftestpy%e5%b1%82%e7%ba%a7%e8%a6%86%e5%86%99fixture)
-  - [16.2. 在模块层级覆写`fixture`](#162-%e5%9c%a8%e6%a8%a1%e5%9d%97%e5%b1%82%e7%ba%a7%e8%a6%86%e5%86%99fixture)
-  - [16.3. 在用例参数中覆写`fixture`](#163-%e5%9c%a8%e7%94%a8%e4%be%8b%e5%8f%82%e6%95%b0%e4%b8%ad%e8%a6%86%e5%86%99fixture)
-  - [16.4. 参数化的`fixture`覆写非参数化的`fixture`，反之亦然](#164-%e5%8f%82%e6%95%b0%e5%8c%96%e7%9a%84fixture%e8%a6%86%e5%86%99%e9%9d%9e%e5%8f%82%e6%95%b0%e5%8c%96%e7%9a%84fixture%e5%8f%8d%e4%b9%8b%e4%ba%a6%e7%84%b6)
+- [1. `fixture`：作为形参使用](#1-fixture作为形参使用)
+- [2. `fixture`：一个典型的依赖注入的实践](#2-fixture一个典型的依赖注入的实践)
+- [3. `conftest.py`：共享`fixture`实例](#3-conftestpy共享fixture实例)
+- [4. 共享测试数据](#4-共享测试数据)
+- [5. 作用域：在跨类的、模块的或整个测试会话的用例中，共享`fixture`实例](#5-作用域在跨类的模块的或整个测试会话的用例中共享fixture实例)
+  - [5.1. `package`作用域（实验性的）](#51-package作用域实验性的)
+- [6. `fixture`的实例化顺序](#6-fixture的实例化顺序)
+- [7. `fixture`的清理操作](#7-fixture的清理操作)
+  - [7.1. 使用`yield`代替`return`](#71-使用yield代替return)
+  - [7.2. 使用`with`写法](#72-使用with写法)
+  - [7.3. 使用`addfinalizer`方法](#73-使用addfinalizer方法)
+- [8. `fixture`可以访问测试请求的上下文](#8-fixture可以访问测试请求的上下文)
+- [9. `fixture`返回工厂函数](#9-fixture返回工厂函数)
+- [10. `fixture`的参数化](#10-fixture的参数化)
+- [11. 在参数化的`fixture`中标记用例](#11-在参数化的fixture中标记用例)
+- [12. 模块化：`fixture`使用其它的`fixture`](#12-模块化fixture使用其它的fixture)
+- [13. 高效的利用`fixture`实例](#13-高效的利用fixture实例)
+- [14. 在类、模块和项目级别上使用`fixture`实例](#14-在类模块和项目级别上使用fixture实例)
+- [15. 自动使用`fixture`](#15-自动使用fixture)
+- [16. 在不同的层级上覆写`fixture`](#16-在不同的层级上覆写fixture)
+  - [16.1. 在文件夹（`conftest.py`）层级覆写`fixture`](#161-在文件夹conftestpy层级覆写fixture)
+  - [16.2. 在模块层级覆写`fixture`](#162-在模块层级覆写fixture)
+  - [16.3. 在用例参数中覆写`fixture`](#163-在用例参数中覆写fixture)
+  - [16.4. 参数化的`fixture`覆写非参数化的`fixture`，反之亦然](#164-参数化的fixture覆写非参数化的fixture反之亦然)
 
 `pytest fixtures`的目的是提供一个固定的基线，使测试可以在此基础上可靠地、重复地执行；对比`xUnit`经典的`setup/teardown`形式，它在以下方面有了明显的改进：
 
@@ -733,7 +733,7 @@ def test_data(data_set):
     assert eval(data_set[0]) == data_set[1]
 ```
 
-我们使用`pytest.param(('6*9', 42), marks=pytest.mark.xfail, id='failed')`的形式指定一个`request.param`入参，其中`marks`表示当用例使用这个入参时，跳过执行将用例标记为`xfail`；并且，我们还使用`id`为此时的用例指定了一个测试`ID`；
+我们使用`pytest.param(('6*9', 42), marks=pytest.mark.xfail, id='failed')`的形式指定一个`request.param`入参，其中`marks`表示当用例使用这个入参时，为这个用例打上`xfail`标记；并且，我们还使用`id`为此时的用例指定了一个测试`ID`；
 
 ```bash
 $ pipenv run pytest -v src/chapter-4/test_fixture_marks.py::test_data
