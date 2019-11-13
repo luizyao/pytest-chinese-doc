@@ -35,6 +35,7 @@
 - [8、捕获告警信息](docs/8、捕获告警信息.md)
 - [9、集成文档测试](docs/9、集成文档测试.md)
 - [10、skip和xfail标记](docs/10、skip和xfail标记.md)
+- [11、测试的参数化](docs/11、测试的参数化.md)
 
 # TODO
 - [ ] 阅读`pytest`源码
@@ -49,3 +50,5 @@
 - 关注微信公众号【小鹿的先森】，回复【pytest】：
 
     ![小鹿的先森](wechat.jpg)
+
+- 博客园：<https://www.cnblogs.com/luizyao/p/11771740.html>

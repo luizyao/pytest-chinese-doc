@@ -22,13 +22,13 @@
 
 通常，我们使用一个字母作为一种类型的代表，具体的规则如下：
 
-```shell
+```bash
 (f)ailed, (E)rror, (s)kipped, (x)failed, (X)passed, (p)assed, (P)assed with output, (a)ll except passed(p/P), or (A)ll
 ```
 
 例如，显示结果为`XFAIL`、`XPASS`和`SKIPPED`的用例：
 
-```shell
+```bash
 pytest -rxXs
 ```
 
@@ -131,7 +131,7 @@ def test_two():
 
 现在，我们来执行这两个用例（当前虚拟环境的`python`版本为`3.7.3`）：
 
-```shell
+```bash
 λ pipenv run pytest -rs -k 'module' src/chapter-10/
 ================================ test session starts ================================= 
 platform win32 -- Python 3.7.3, pytest-5.1.3, py-1.8.0, pluggy-0.13.0
@@ -383,7 +383,7 @@ def test_params(n, expected):
 
 执行：
 
-```shell
+```bash
 λ pipenv run pytest -rA src/chapter-10/test_params.py
 ================================ test session starts ================================= 
 platform win32 -- Python 3.7.3, pytest-5.1.3, py-1.8.0, pluggy-0.13.0
