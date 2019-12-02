@@ -4,7 +4,7 @@
 Author: luizyao (luizyao@163.com)
 Created Date: 2019-11-30 22:48:56
 -----
-Modified: 2019-12-01 0:39:52
+Modified: 2019-12-02 10:33:22
 Modified By: luizyao (luizyao@163.com)
 -----
 THIS PROGRAM IS FREE SOFTWARE, IS LICENSED UNDER MIT.
@@ -25,7 +25,7 @@ def test_one():
 
 
 def test_two():
-    assert 1
+    assert 0
 
 
 def test_three():
@@ -34,3 +34,7 @@ def test_three():
 
 def test_four():
     assert 0
+
+
+def test_five():
+    assert 1
