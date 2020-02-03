@@ -66,3 +66,10 @@
     ![小鹿的先森](wechat.jpg)
 
 - 博客园：<https://www.cnblogs.com/luizyao/p/11771740.html>
+
+
+# Breaking Changes
+
+## (2020-02-03)
+
+- 使用requirements.txt代替pipenv管理虚拟环境 ([0b0bb24](https://github.com/luizyao/pytest-chinese-doc/commit/0b0bb24))
