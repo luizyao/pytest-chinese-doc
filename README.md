@@ -8,19 +8,28 @@
 
 
 # 环境
+
 - `pytest`版本：5.1.3
 - `python`版本：3.7.3
-- `pipenv`版本：2018.11.26
 
 
 # 使用
+
 - `git clone git@github.com:luizyao/pytest-chinese-doc.git`仓库：
 
-  `docs/`目录下包含所有的文章，以[markdown](https://daringfireball.net/projects/markdown/)格式编写；
+    `docs/`目录下包含所有的文章，以[markdown](https://daringfireball.net/projects/markdown/)格式编写；
 
-  `src/`目录下包含所有的示例源码，以章节划分；
+    `src/`目录下包含所有的示例源码，以章节划分；
 
-- 进入项目的根目录下，执行`pipenv install`，创建仓库的虚拟环境
+- 进入项目的根目录下，执行以下命令：
+
+    ```bash
+    $ python3 -m venv .venv-5.1.3  # 使用虚拟环境
+    $ source .venv-5.1.3/bin/activate  # 激活虚拟环境，不同的操作系统命令可能不一样
+    $ pip install -r requirements.txt  # 安装依赖
+    $ pytest --version  # 查看当前pytest的版本
+    ```
+
 
 
 # 目录
@@ -38,16 +47,20 @@
 - [11、测试的参数化](docs/11、测试的参数化.md)
 - [12、缓存：记录执行的状态](docs/12、缓存：记录执行的状态.md)
 
+
 # TODO
+
 - [ ] 阅读`pytest`源码
 - [ ] 基于`pytest`，实践一个WEB自动化框架 
 
 
 # LICENSE
+
 [MIT LICENSE](LICENSE)
 
 
 # 其它获取途径
+
 - 关注微信公众号【小鹿的先森】，回复【pytest】：
 
     ![小鹿的先森](wechat.jpg)
