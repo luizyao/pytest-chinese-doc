@@ -51,7 +51,9 @@
 # TODO
 
 - [ ] 阅读`pytest`源码
-- [ ] 基于`pytest`，实践一个WEB自动化框架 
+- [x] 基于`pytest`，实践一个WEB自动化框架
+
+  [pytest-pyppeteer](https://github.com/luizyao/pytest-pyppeteer): Test with pyppeteer in pytest.
 
 
 # LICENSE
