@@ -1,0 +1,14 @@
+[[source]]
+name = "pypi"
+url = "https://mirrors.aliyun.com/pypi/simple/"
+verify_ssl = true
+
+[dev-packages]
+mkdocs = "*"
+pymdown-extensions = "*"
+
+[packages]
+pytest = "==6.0.2"
+
+[requires]
+python_version = "3.8"

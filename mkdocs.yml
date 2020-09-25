@@ -1,0 +1,26 @@
+site_name: pytest 中文文档（v6.0.2）
+site_description: 不仅仅是单纯的翻译，也包含我的理解和实践。
+site_author: Yao Meng
+
+repo_url: https://github.com/luizyao/pytest-chinese-doc/tree/6.0.2
+edit_uri: ""
+
+theme:
+  name: readthedocs
+  highlightjs: true
+
+nav:
+  - 首页: index.md
+  - 中文文档:
+    - 一、安装和入门: zh-Hans-CN/一、安装和入门.md
+  - 关于:
+    - License: about/license.md
+
+markdown_extensions:
+    - toc:
+        permalink: "#"
+    - admonition
+    - def_list
+    - pymdownx.extra
+
+copyright: Copyright &copy; 2020 <a href="https://github.com/luizyao">Yao Meng</a>
