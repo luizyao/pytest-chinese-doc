@@ -17,7 +17,7 @@
 
 
 ## 在线阅读
-
+https://pytest-chinese-doc.readthedocs.io/
 
 ## 其它获取途径
 - 关注微信公众号【小鹿的先森】，回复【pytest】：
