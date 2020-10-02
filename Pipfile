@@ -8,7 +8,7 @@ mkdocs = "*"
 pymdown-extensions = "*"
 
 [packages]
-pytest = "==6.0.2"
+pytest = "==6.1.0"
 
 [requires]
 python_version = "3.8"
