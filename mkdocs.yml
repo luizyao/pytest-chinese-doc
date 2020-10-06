@@ -1,8 +1,8 @@
-site_name: pytest 中文文档（v6.0.2）
+site_name: pytest 中文文档（v6.1.1）
 site_description: 不仅仅是单纯的翻译，也包含我的理解和实践。
 site_author: Yao Meng
 
-repo_url: https://github.com/luizyao/pytest-chinese-doc/tree/6.0.2
+repo_url: https://github.com/luizyao/pytest-chinese-doc
 edit_uri: ""
 
 theme:
@@ -13,6 +13,7 @@ nav:
   - 首页: index.md
   - 中文文档:
     - 一、安装和入门: zh-Hans-CN/一、安装和入门.md
+    - 二、使用和调用: zh-Hans-CN/二、使用和调用.md
   - 关于:
     - License: about/license.md
 
