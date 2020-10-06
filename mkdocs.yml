@@ -14,6 +14,7 @@ nav:
   - 中文文档:
     - 一、安装和入门: zh-Hans-CN/一、安装和入门.md
     - 二、使用和调用: zh-Hans-CN/二、使用和调用.md
+    - 三、编写断言: zh-Hans-CN/三、编写断言.md
   - 关于:
     - License: about/license.md
 
