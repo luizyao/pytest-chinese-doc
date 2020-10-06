@@ -19,10 +19,6 @@
   
 - 进入项目根目录，执行命令`pipenv install`安装虚拟环境，使用的是[豆瓣的镜像](https://pypi.doubanio.com/simple/)。
 
-## 在线文档
-
-<https://pytest-chinese-doc.readthedocs.io/>
-
 ## 其它获取途径
 
 - 关注微信公众号【小鹿的先森】，回复【pytest】：
