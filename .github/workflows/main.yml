@@ -3,9 +3,9 @@ name: Build and Deploy Github Pages
 on:
   push:
     branches: [ 6.1.1 ]
-      paths-ignore:
-        - .gitignore
-        - .editorconfig
+    paths-ignore:
+      - .gitignore
+      - .editorconfig
 
 jobs:
   build-and-deploy:
@@ -17,9 +17,9 @@ jobs:
           persist-credentials: false
 
       - name: Set up Python
-          uses: actions/setup-python@v2
-          with:
-            python-version: '3.8.4'
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.4'
 
       - name: Install dependencies
         run: |
