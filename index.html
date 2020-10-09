@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="不仅仅是单纯的翻译，也包含我的理解和实践。">
+  <meta name="author" content="Yao Meng">
+  
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <title>pytest 中文文档（v6.1.1）</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "\u9996\u9875";
+    var mkdocs_page_input_path = "index.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="js/jquery-2.1.1.min.js" defer></script>
+  <script src="js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="." class="icon icon-home"> pytest 中文文档（v6.1.1）</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href=".">首页</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#_1">环境</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_2">使用</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_3">其它获取途径</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#v513-v611">主要新加及修订的内容（v5.1.3 -&gt; v6.1.1）</a>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">中文文档</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="zh-Hans-CN/%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85%E5%92%8C%E5%85%A5%E9%97%A8/">一、安装和入门</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="zh-Hans-CN/%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8%E5%92%8C%E8%B0%83%E7%94%A8/">二、使用和调用</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="zh-Hans-CN/%E4%B8%89%E3%80%81%E7%BC%96%E5%86%99%E6%96%AD%E8%A8%80/">三、编写断言</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">关于</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="about/license/">License</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href=".">pytest 中文文档（v6.1.1）</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>首页</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="pytest-chinese-doc">pytest-chinese-doc<a class="headerlink" href="#pytest-chinese-doc" title="Permanent link">#</a></h1>
+<p><a href="https://docs.pytest.org/en/6.1.1/contents.html">pytest（v6.1.1）</a>的中文文档，不仅仅是单纯的翻译，也包含我的一些理解和实践，希望有更多的人使用这款优秀的测试框架。</p>
+<h2 id="_1">环境<a class="headerlink" href="#_1" title="Permanent link">#</a></h2>
+<ul>
+<li><code>pytest</code>版本：6.1.1</li>
+<li><code>python</code>版本：3.8.4</li>
+</ul>
+<h2 id="_2">使用<a class="headerlink" href="#_2" title="Permanent link">#</a></h2>
+<ul>
+<li>
+<p>克隆此仓库；</p>
+<ul>
+<li>
+<p><code>docs</code>目录中包含所有的文章，以<a href="https://daringfireball.net/projects/markdown/">markdown</a>格式编写，集成<a href="https://python-markdown.github.io/extensions/admonition/">admonition</a>扩展，使用<a href="https://github.com/mkdocs/mkdocs">mkdocs</a>工具支撑在线文档。</p>
+</li>
+<li>
+<p><code>src</code>目录中包含所有示例的源码，以章节划分。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>进入项目根目录，执行命令<code>pipenv install</code>安装虚拟环境，使用的是<a href="https://pypi.doubanio.com/simple/">豆瓣的镜像</a>。</p>
+</li>
+</ul>
+<h2 id="_3">其它获取途径<a class="headerlink" href="#_3" title="Permanent link">#</a></h2>
+<ul>
+<li>
+<p>关注微信公众号【小鹿的先森】，回复【pytest】：</p>
+<p><img alt="wechat" src="img/wechat.jpg" /></p>
+</li>
+<li>
+<p>博客园：<a href="https://www.cnblogs.com/luizyao/p/11771740.html">https://www.cnblogs.com/luizyao/p/11771740.html</a></p>
+</li>
+</ul>
+<h2 id="v513-v611">主要新加及修订的内容（v5.1.3 -&gt; v6.1.1）<a class="headerlink" href="#v513-v611" title="Permanent link">#</a></h2>
+<ul>
+<li><code>--pdb</code>加载<a href="https://ipython.org/">ipython</a>环境作为诊断器：<a href="zh-Hans-CN/二、使用和调用/#_13">查看</a></li>
+<li><code>--durations-min</code>默认值从<code>0.01</code>秒修改成<code>0.005</code>秒：<a href="zh-Hans-CN/二、使用和调用/#_14">查看</a></li>
+<li><code>--junit_family</code>命令行选项的默认值改成<code>xunit2</code>：<a href="zh-Hans-CN/二、使用和调用/#xml">查看</a></li>
+<li>移除了对<code>--resultlog</code>命令行选项的支持：<a href="https://docs.pytest.org/en/stable/deprecations.html#result-log-result-log">查看</a></li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="zh-Hans-CN/%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85%E5%92%8C%E5%85%A5%E9%97%A8/" class="btn btn-neutral float-right" title="一、安装和入门">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright &copy; 2020 <a href="https://github.com/luizyao">Yao Meng</a></p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/luizyao/pytest-chinese-doc" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+      
+        <span style="margin-left: 15px"><a href="zh-Hans-CN/%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85%E5%92%8C%E5%85%A5%E9%97%A8/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.1.2
+Build Date UTC : 2020-10-09 23:18:00.837792+00:00
+-->

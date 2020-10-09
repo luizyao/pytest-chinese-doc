@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Yao Meng">
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>二、使用和调用 - pytest 中文文档（v6.1.1）</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../../css/theme.css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "\u4e8c\u3001\u4f7f\u7528\u548c\u8c03\u7528";
+    var mkdocs_page_input_path = "zh-Hans-CN/\u4e8c\u3001\u4f7f\u7528\u548c\u8c03\u7528.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> pytest 中文文档（v6.1.1）</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">中文文档</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85%E5%92%8C%E5%85%A5%E9%97%A8/">一、安装和入门</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">二、使用和调用</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#python-m-pytest">通过python -m pytest的方式执行测试</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_2">测试结束时可能返回的状态码</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_3">获取帮助信息</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#n">在第一个（N个）测试用例失败时退出</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_4">执行指定的测试用例</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_5">执行指定模块中的测试用例</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_6">执行指定目录下所有的测试用例</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_7">执行匹配指定关键字的测试用例</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#nodeid">执行指定nodeid的测试用例</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_8">执行指定标记的测试用例</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_9">执行指定包中的测试用例</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_10">修改回溯信息的输出模式</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_11">详细的总结报告</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pdbpython-debugger">失败时加载PDB（Python Debugger）环境</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pdb">开始执行时就加载PDB环境</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_12">设置断点</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_13">使用内置的中断函数</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_14">分析测试执行时长</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_15">错误句柄</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#junitxml">创建JUnitXML格式的测试报告</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#xml">在XML报告中为测试用例附加额外的子节点信息</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#xml_1">在XML报告中为测试用例附加额外的属性信息</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#xml_2">在XML报告中为测试集附加额外的子节点信息</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#url-pastebin">为测试报告提供URL链接 -- pastebin服务</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_16">尽早的加载插件</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_17">去使能插件</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pythonpytest">在python代码中调用pytest</a>
+    </li>
+    </ul>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../%E4%B8%89%E3%80%81%E7%BC%96%E5%86%99%E6%96%AD%E8%A8%80/">三、编写断言</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">关于</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../about/license/">License</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">pytest 中文文档（v6.1.1）</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>中文文档 &raquo;</li>
+        
+      
+    
+    <li>二、使用和调用</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="_1">使用和调用<a class="headerlink" href="#_1" title="Permanent link">#</a></h1>
+<h2 id="python-m-pytest">通过<code>python -m pytest</code>的方式执行测试<a class="headerlink" href="#python-m-pytest" title="Permanent link">#</a></h2>
+<p>我们可以在命令行中通过以下方式执行测试：</p>
+<pre class="highlight"><code class="language-bash">python -m pytest [...]</code></pre>
+<p>不过这会将当前路径加入到<code>sys.path</code>中，除此之外它与<code>pytest [...]</code>的效果一样。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>python -m mod</code>表示将模块（<code>mod</code>）作为脚本来运行，但是模块中必须包含一个<a href="https://docs.python.org/3/library/__main__.html"><code>__main__.py</code></a>文件。</p>
+<p>pytest 的<code>__main__.py</code>文件内容如下：</p>
+<pre class="highlight"><code class="language-python">"""The pytest entry point."""
+import pytest
+
+if __name__ == "__main__":
+raise SystemExit(pytest.console_main())</code></pre>
+</div>
+<h2 id="_2">测试结束时可能返回的状态码<a class="headerlink" href="#_2" title="Permanent link">#</a></h2>
+<p>测试执行结束后，pytest 可能会返回以下六种不同的状态码：</p>
+<ul>
+<li>0（<strong>OK</strong>）：收集到的所有的测试用例均测试成功；</li>
+<li>1（<strong>TESTS_FAILED</strong>）：有用例测试失败；</li>
+<li>2（<strong>INTERRUPTED</strong>）：测试执行过程被用户终止，例如：<code>CTRL + C</code>；</li>
+<li>3（<strong>INTERNAL_ERROR</strong>）：测试执行过程中发生内部错误；</li>
+<li>4（<strong>USAGE_ERROR</strong>）：pytest 命令行使用错误；</li>
+<li>5（<strong>NO_TESTS_COLLECTED</strong>）：没有收集到任何测试用例；</li>
+</ul>
+<p>它们封装在一个枚举类中：<a href="https://docs.pytest.org/en/6.1.1/reference.html#pytest.ExitCode">pytest.ExitCode</a>，并且可以被直接引入和访问：</p>
+<pre class="highlight"><code class="language-python">from pytest import ExitCode</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>如果你想在某些场景下自定义返回的状态码，尤其是当未收集到任何测试用例时，可以考虑使用<a href="https://github.com/yashtodi94/pytest-custom_exit_code">pytest-custom_exit_code</a>插件。</p>
+</div>
+<h2 id="_3">获取帮助信息<a class="headerlink" href="#_3" title="Permanent link">#</a></h2>
+<pre class="highlight"><code class="language-bash"># 显示 pytest 的版本信息
+$ pytest --version
+
+# 显示所有可用的 fixture
+$ pytest --fixtures
+
+# 显示命令行的帮助信息和配置文件的选项
+$ pytest -h | --help</code></pre>
+<p>所有可用的命令行选项可以参看：<a href="https://docs.pytest.org/en/6.1.1/reference.html#command-line-flags">https://docs.pytest.org/en/6.1.1/reference.html#command-line-flags</a></p>
+<h2 id="n">在第一个（N个）测试用例失败时退出<a class="headerlink" href="#n" title="Permanent link">#</a></h2>
+<pre class="highlight"><code class="language-bash"># 遇到第一个失败的测试用例时退出
+$ pytest -x | --exitfirst
+
+# 遇到第二个失败的测试用例时退出
+$ pytest --maxfail=2</code></pre>
+<h2 id="_4">执行指定的测试用例<a class="headerlink" href="#_4" title="Permanent link">#</a></h2>
+<p>pytest 支持多种方式从命令行执行指定的测试用例。</p>
+<h3 id="_5">执行指定模块中的测试用例<a class="headerlink" href="#_5" title="Permanent link">#</a></h3>
+<pre class="highlight"><code class="language-bash">$ pytest test_mod.py</code></pre>
+<h3 id="_6">执行指定目录下所有的测试用例<a class="headerlink" href="#_6" title="Permanent link">#</a></h3>
+<pre class="highlight"><code class="language-bash">$ pytest testing/</code></pre>
+<h3 id="_7">执行匹配指定关键字的测试用例<a class="headerlink" href="#_7" title="Permanent link">#</a></h3>
+<pre class="highlight"><code class="language-bash">$ pytest -k "MyClass and not method"</code></pre>
+<p>这将执行测试模块名、类名或者函数名匹配指定关键字的测试用例（不区分大小写）。例如，上述例子会执行<code>TestMyClass.test_something</code>，而不会执行<code>TestMyClass.test_method_simple</code>。</p>
+<h3 id="nodeid">执行指定<code>nodeid</code>的测试用例<a class="headerlink" href="#nodeid" title="Permanent link">#</a></h3>
+<p>pytest 为每一个收集到的测试用例指定一个唯一的<code>nodeid</code>，它由<strong>模块名</strong>和<strong>说明符</strong>构成，以<code>::</code>间隔，其中说明符可以包含类名、函数名和由<code>parametrize</code>标记赋予的参数。</p>
+<p>我们来看下面这个例子，这里有三个测试用例，分别对应不同的<strong>说明符</strong>：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-2/test_nodeid.py
+
+import pytest
+
+
+def test_one():
+    pass
+
+
+class TestNodeid:
+    def test_one(self):
+        pass
+
+    @pytest.mark.parametrize("x,y", [(1, 2), (3, 4)])
+    def test_two(self, x, y):
+        assert x + 1 == y</code></pre>
+<ul>
+<li>
+<p>指定<strong>函数名</strong>：</p>
+<pre class="highlight"><code class="language-bash">$ pipenv run pytest src/chapter-2/test_nodeid.py::test_one --collect-only
+================================ test session starts =================================
+platform darwin -- Python 3.8.4, pytest-6.1.1, py-1.9.0, pluggy-0.13.1
+rootdir: /Users/yaomeng/Private/projects/pytest-chinese-doc
+collected 1 item
+
+&lt;Module src/chapter-2/test_nodeid.py&gt;
+  &lt;Function test_one&gt;
+
+=============================== no tests ran in 0.01s ================================</code></pre>
+</li>
+<li>
+<p>指定<strong>类名+函数名</strong>：</p>
+<pre class="highlight"><code class="language-bash">$ pipenv run pytest src/chapter-2/test_nodeid.py::TestNodeid::test_one --collect-only
+================================ test session starts =================================
+platform darwin -- Python 3.8.4, pytest-6.1.1, py-1.9.0, pluggy-0.13.1
+rootdir: /Users/yaomeng/Private/projects/pytest-chinese-doc
+collected 1 item
+
+&lt;Module src/chapter-2/test_nodeid.py&gt;
+  &lt;Class TestNodeid&gt;
+      &lt;Function test_one&gt;
+
+=============================== no tests ran in 0.01s ================================</code></pre>
+</li>
+<li>
+<p>指定<strong>由<code>parametrize</code>标记赋予的参数</strong>：</p>
+<pre class="highlight"><code class="language-bash">$ pipenv run pytest src/chapter-2/test_nodeid.py::TestNodeid::test_two[1-2] --collect-only
+================================ test session starts =================================
+platform darwin -- Python 3.8.4, pytest-6.1.1, py-1.9.0, pluggy-0.13.1
+rootdir: /Users/yaomeng/Private/projects/pytest-chinese-doc
+collecting ... nodeid src/chapter-2/test_nodeid.py::TestNodeid::test_two[1-2]
+collected 1 item
+
+&lt;Module src/chapter-2/test_nodeid.py&gt;
+&lt;Class TestNodeid&gt;
+&lt;Function test_two[1-2]&gt;
+
+=============================== no tests ran in 0.01s ================================</code></pre>
+<p>这里指定参数<code>x</code>、<code>y</code>的形式是<code>[1-1]</code>，中间以<code>-</code>间隔，并且只能为<code>[1-1]</code>或者<code>[3-4]</code>。</p>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>上述方式并未真正执行这些测试用例，只是通过<code>--collect-only</code>展示过滤后收集到的测试用例。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>我们也可以使用上面介绍的命令行选项<code>-k</code>达到同样的效果，例如：执行<code>test_nodeid.py::test_one</code>测试用例：</p>
+<pre class="highlight"><code class="language-bash">$ pipenv run pytest -k "test_one and not testnodeid" src/chapter-2/test_nodeid.py --collect-only
+================================ test session starts =================================
+platform darwin -- Python 3.8.4, pytest-6.1.1, py-1.9.0, pluggy-0.13.1
+rootdir: /Users/yaomeng/Private/projects/pytest-chinese-doc
+collected 4 items / 3 deselected / 1 selected
+
+&lt;Module src/chapter-2/test_nodeid.py&gt;
+&lt;Function test_one&gt;
+
+=============================== 3 deselected in 0.01s ================================</code></pre>
+<p>这和上面的<code>pipenv run pytest src/chapter-2/test_nodeid.py::test_one --collect-only</code>效果是一样的。</p>
+</div>
+</li>
+</ul>
+<h3 id="_8">执行指定标记的测试用例<a class="headerlink" href="#_8" title="Permanent link">#</a></h3>
+<pre class="highlight"><code class="language-bash">$ pytest -m slow</code></pre>
+<p>这会执行所有由<code>@pytest.mark.slow</code>标记的测试用例。</p>
+<p>更多详细的信息可以参考：<a href="https://docs.pytest.org/en/6.1.1/mark.html#mark">https://docs.pytest.org/en/6.1.1/mark.html#mark</a></p>
+<h3 id="_9">执行指定包中的测试用例<a class="headerlink" href="#_9" title="Permanent link">#</a></h3>
+<pre class="highlight"><code class="language-bash">$ pytest --pyargs pkg.testing</code></pre>
+<h2 id="_10">修改回溯信息的输出模式<a class="headerlink" href="#_10" title="Permanent link">#</a></h2>
+<pre class="highlight"><code class="language-bash"># 在回溯信息中显示局部变量
+$ pytest -l | --showlocals
+
+# 默认的模式
+$ pytest --tb=auto
+
+# 详细的输出
+$ pytest --tb=long
+
+# 精简的输出
+$ pytest --tb=short
+
+# 每个失败信息总结在一行中
+$ pytest --tb=line
+
+# python 的标准模式
+$ pytest --tb=native
+
+# 不打印回溯信息
+$ pytest --tb=no</code></pre>
+<p>使用<code>--full-trace</code>标记会得到更详细的回溯信息（比<code>--tb=long</code>还要详细），并且它甚至会抓取用户强制打断测试执行时的回溯信息（<code>CTRL + C</code>）。这在某些场景非常有用，当你的测试长时间挂死在某一步，你可以使用<code>CTRL + C</code>退出执行来定位问题。</p>
+<h2 id="_11">详细的总结报告<a class="headerlink" href="#_11" title="Permanent link">#</a></h2>
+<p>我们可以使用命令行选项<code>-r</code>在执行结束后，打印一个总结报告。</p>
+<p>例如，我们有以下测试模块：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-2/test_report.py
+
+import pytest
+
+
+@pytest.fixture
+def error_fixture():
+    assert 0
+
+
+def test_ok():
+    print("ok")
+
+
+def test_fail():
+    assert 0
+
+
+def test_error(error_fixture):
+    pass
+
+
+def test_skip():
+    pytest.skip("skipping this test")
+
+
+def test_xfail():
+    pytest.xfail("xfailing this test")
+
+
+@pytest.mark.xfail(reason="always xfail")
+def test_xpass():
+    pass</code></pre>
+<p>现在，我们想在测试结束后，展示所有<strong>没有测试成功</strong>的测试用例的报告：</p>
+<pre class="highlight"><code class="language-bash">pipenv run pytest -q -ra src/chapter-2/test_report.py
+.FEsxX                                                                         [100%]
+======================================= ERRORS =======================================
+____________________________ ERROR at setup of test_error ____________________________
+
+    @pytest.fixture
+    def error_fixture():
+&gt;       assert 0
+E       assert 0
+
+src/chapter-2/test_report.py:6: AssertionError
+====================================== FAILURES ======================================
+_____________________________________ test_fail ______________________________________
+
+    def test_fail():
+&gt;       assert 0
+E       assert 0
+
+src/chapter-2/test_report.py:14: AssertionError
+============================== short test summary info ===============================
+SKIPPED [1] src/chapter-2/test_report.py:22: skipping this test
+XFAIL src/chapter-2/test_report.py::test_xfail
+  reason: xfailing this test
+XPASS src/chapter-2/test_report.py::test_xpass always xfail
+ERROR src/chapter-2/test_report.py::test_error - assert 0
+FAILED src/chapter-2/test_report.py::test_fail - assert 0
+1 failed, 1 passed, 1 skipped, 1 xfailed, 1 xpassed, 1 error in 0.06s</code></pre>
+<p>我们可以看到在<code>short test summary info</code>的区域中，报告展示了<code>SKIPPED</code>、<code>XFAIL</code>、<code>XPASS</code>、<code>ERROR</code>和<code>FAILED</code>的测试用例，唯独没有展示<code>PASSED</code>的测试用例。</p>
+<p><code>-r</code>可以在它的后面紧接着一个或者多个字符，用于指定想要显示的测试用例，默认是<code>fE</code>，表示总结报告只会显示失败的和发生错误的测试用例。</p>
+<p>所有有效的字符参数如下：</p>
+<ul>
+<li><code>f</code>：失败的；</li>
+<li><code>E</code>：发生错误的；</li>
+<li><code>s</code>：被跳过的；</li>
+<li><code>x</code>：结果为<code>xfailed</code>的；</li>
+<li><code>p</code>：成功的；</li>
+<li><code>P</code>：成功的，并且有输出信息的。即测试用例中包含<code>print</code>等行为的；</li>
+</ul>
+<p>以及一些特殊的字符参数：</p>
+<ul>
+<li><code>a</code>：所有的，但是除了<code>pP</code>的；</li>
+<li><code>A</code>：所有的；</li>
+<li><code>N</code>：因为默认值是<code>fE</code>，所以我们可以通过它去不打印测试报告；</li>
+</ul>
+<p>上述字符参数也可以叠加使用，例如：我们期望过滤出失败的和未执行的：</p>
+<pre class="highlight"><code class="language-bash">$ pytest -rfs</code></pre>
+<h2 id="pdbpython-debugger">失败时加载<a href="http://docs.python.org/library/pdb.html">PDB</a>（Python Debugger）环境<a class="headerlink" href="#pdbpython-debugger" title="Permanent link">#</a></h2>
+<p><code>PDB</code>是<code>python</code>内建的诊断器，pytest 允许通过以下命令在执行失败时进入这个诊断器模式：</p>
+<pre class="highlight"><code class="language-bash">$ pytest --pdb</code></pre>
+<p>pytest 会在<strong>每个测试用例</strong>失败（或者<code>Ctrl+C</code>）时，调用这个诊断器。如果你只想在第一次失败时，调用这个诊断器，可以通过以下命令：</p>
+<pre class="highlight"><code class="language-bash"># 遇到第一个失败时，调用 PDB 环境，然后退出整个执行过程
+$ pytest -x --pdb
+
+# 只有前三个失败用例调用 PDB 环境
+$ pytest --pdb --maxfail=3</code></pre>
+<p><code>sys.last_value</code>、<code>sys.last_type</code>和<code>sys.last_traceback</code>存储了发生异常时信息，我们可以在 PDB 环境中访问它们。</p>
+<p>我们来看下面这个测试用例：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-2/test_pdb.py
+
+def test_pdb():
+    x = 0
+    assert x</code></pre>
+<p>执行测试用例（<code>--pdb</code>）：</p>
+<pre class="highlight"><code class="language-bash">$ pipenv run pytest src/chapter-2/test_pdb.py --pdb
+================================ test session starts =================================
+platform darwin -- Python 3.8.4, pytest-6.1.1, py-1.9.0, pluggy-0.13.1
+rootdir: /Users/yaomeng/Private/projects/pytest-chinese-doc
+collected 1 item
+
+src/chapter-2/test_pdb.py F
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; traceback &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+
+    def test_pdb():
+        x = 0
+&gt;       assert x
+E       assert 0
+
+src/chapter-2/test_pdb.py:3: AssertionError
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; entering PDB &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; PDB post_mortem (IO-capturing turned off) &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+&gt; /Users/yaomeng/Private/projects/pytest-chinese-doc/src/chapter-2/test_pdb.py(3)test_pdb()
+-&gt; assert x
+# 需要先引入 sys 模块
+(Pdb) import sys
+(Pdb) sys.last_value
+AssertionError('assert 0')
+(Pdb) sys.last_type
+&lt;class 'AssertionError'&gt;
+# 使用 exit 退出 PDB 环境，使用 continue 继续执行下面的步骤
+(Pdb) exit
+
+
+============================== short test summary info ===============================
+FAILED src/chapter-2/test_pdb.py::test_pdb - assert 0
+!!!!!!!!!!!!!!!!!!!!!! _pytest.outcomes.Exit: Quitting debugger !!!!!!!!!!!!!!!!!!!!!!
+================================= 1 failed in 27.67s =================================</code></pre>
+<h2 id="pdb">开始执行时就加载<code>PDB</code>环境<a class="headerlink" href="#pdb" title="Permanent link">#</a></h2>
+<p>我们可以通过以下命令，在<strong>每个测试用例</strong>开始时，都先加载<code>PDB</code>环境：</p>
+<pre class="highlight"><code class="language-bash">$ pytest --trace</code></pre>
+<h2 id="_12">设置断点<a class="headerlink" href="#_12" title="Permanent link">#</a></h2>
+<p>在测试用例代码中添加<code>import pdb;pdb.set_trace()</code>，当其被调用时，<code>pytest</code>会停止这条用例的输出：</p>
+<ul>
+<li>其他用例不受影响；</li>
+<li>通过<code>continue</code>命令，可以退出<code>PDB</code>环境，并继续执行用例；</li>
+</ul>
+<h2 id="_13">使用内置的中断函数<a class="headerlink" href="#_13" title="Permanent link">#</a></h2>
+<p>python 3.7 开始新加了一个内置<code>breakpoint()</code>函数。pytest 支持以下使用行为：</p>
+<ul>
+<li>当<code>breakpoint()</code>被调用，并且<code>PYTHONBREAKPOINT</code>为<code>None</code>时，<code>pytest</code>会使用自定义的<code>PDB</code>代替系统的；</li>
+<li>测试执行结束时，自动切回系统自带的<code>PDB</code>；</li>
+<li>当加上<code>--pdb</code>选项时，<code>breakpoint()</code>和测试发生错误时，都会调用内部自定义的<code>PDB</code>；</li>
+<li><code>--pdbcls</code>选项允许指定一个用户自定义的<code>PDB</code>类；</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>我们可以通过<code>--pdbcls=IPython.terminal.debugger:TerminalPdb</code>选项指定<a href="https://ipython.org/">ipython</a>为我们的 PDB 调试环境：  <br />
+<pre class="highlight"><code class="language-bash">$ pipenv run pytest src/chapter-2/test_pdb.py --pdbcls=IPython.terminal.debugger:TerminalPdb --pdb
+================================ test session starts =================================
+platform darwin -- Python 3.8.4, pytest-6.1.1, py-1.9.0, pluggy-0.13.1
+rootdir: /Users/yaomeng/Private/projects/pytest-chinese-doc
+collected 1 item
+
+src/chapter-2/test_pdb.py F
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; traceback &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+
+  def test_pdb():
+      x = 0
+&gt;       assert x
+E       assert 0
+
+src/chapter-2/test_pdb.py:3: AssertionError
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; entering PDB &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; PDB post_mortem (IO-capturing turned off) &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+&gt; /Users/yaomeng/Private/projects/pytest-chinese-doc/src/chapter-2/test_pdb.py(3)test_pdb()
+    1 def test_pdb():
+    2     x = 0
+----&gt; 3     assert x
+
+ipdb&gt; import sys
+ipdb&gt; sys.last_type
+&lt;class 'AssertionError'&gt;
+ipdb&gt; exit
+
+
+============================== short test summary info ===============================
+FAILED src/chapter-2/test_pdb.py::test_pdb - assert 0
+!!!!!!!!!!!!!!!!!!!!!! _pytest.outcomes.Exit: Quitting debugger !!!!!!!!!!!!!!!!!!!!!!
+================================= 1 failed in 19.02s =================================</code></pre></p>
+</div>
+<h2 id="_14">分析测试执行时长<a class="headerlink" href="#_14" title="Permanent link">#</a></h2>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>pytest 6.0  版本开始使用新的行为</p>
+</div>
+<p>列出执行时间超过1秒，最慢的10个测试用例：</p>
+<pre class="highlight"><code class="language-bash">$ pytest --durations=10 --durations-min=1.0</code></pre>
+<p>默认情况下，pytest 不会列出执行时长小于<code>0.005</code>秒的测试用例，但是我们可以通过添加<code>-vv</code>选项来同时查看它们。</p>
+<h2 id="_15">错误句柄<a class="headerlink" href="#_15" title="Permanent link">#</a></h2>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>pytest 5.0 版本新增特性</p>
+</div>
+<p>在测试执行中发生段错误或者超时的情况下，<code>faulthandler</code>标准模块可以转储<code>python</code>的回溯信息。</p>
+<p>它在 pytest 的执行中默认打开，除非使用<code>-p no:faulthandler</code>命令行选项关闭它。</p>
+<p>同样，<code>faulthandler_timeout=X</code>配置项，可用于当测试用例的完成时间超过<code>X</code>秒时，转储所有线程的<code>python</code>回溯信息：</p>
+<pre class="highlight"><code class="language-ini"># src/chapter-2/pytest.ini
+
+[pytest]
+faulthandler_timeout=5</code></pre>
+<p>我们有如下测试用例：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-2/test_fault_handler.py 
+
+import time
+
+
+def test_faulthandler():
+    time.sleep(7)</code></pre>
+<p>执行测试用例：</p>
+<pre class="highlight"><code class="language-bash">$ pipenv run pytest -q src/chapter-2/test_faulthandler.py
+Timeout (0:00:05)!
+Thread 0x000000010f0505c0 (most recent call first):
+  File "/Users/yaomeng/Private/projects/pytest-chinese-doc/src/chapter-2/test_faulthandler.py", line 5 in test_faulthandler
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/python.py", line 184 in pytest_pyfunc_call
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/callers.py", line 187 in _multicall
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/manager.py", line 84 in &lt;lambda&gt;
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/manager.py", line 93 in _hookexec
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/hooks.py", line 286 in __call__
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/python.py", line 1627 in runtest
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/runner.py", line 163 in pytest_runtest_call
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/callers.py", line 187 in _multicall
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/manager.py", line 84 in &lt;lambda&gt;
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/manager.py", line 93 in _hookexec
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/hooks.py", line 286 in __call__
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/runner.py", line 256 in &lt;lambda&gt;
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/runner.py", line 310 in from_call
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/runner.py", line 255 in call_runtest_hook
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/runner.py", line 216 in call_and_report
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/runner.py", line 127 in runtestprotocol
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/runner.py", line 110 in pytest_runtest_protocol
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/callers.py", line 187 in _multicall
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/manager.py", line 84 in &lt;lambda&gt;
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/manager.py", line 93 in _hookexec
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/hooks.py", line 286 in __call__
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/main.py", line 338 in pytest_runtestloop
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/callers.py", line 187 in _multicall
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/manager.py", line 84 in &lt;lambda&gt;
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/manager.py", line 93 in _hookexec
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/hooks.py", line 286 in __call__
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/main.py", line 313 in _main
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/main.py", line 257 in wrap_session
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/main.py", line 306 in pytest_cmdline_main
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/callers.py", line 187 in _multicall
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/manager.py", line 84 in &lt;lambda&gt;
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/manager.py", line 93 in _hookexec
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/pluggy/hooks.py", line 286 in __call__
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/config/__init__.py", line 164 in main
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/config/__init__.py", line 187 in console_main
+  File "/Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/bin/pytest", line 8 in &lt;module&gt;
+.                                                                              [100%]
+1 passed in 6.02s</code></pre>
+<p>可以看到，在执行刚超过5秒的时候会打印出回溯信息，但不会中断测试的执行；</p>
+<p>关闭<code>faulthandler</code>插件再次执行这个测试用例：</p>
+<pre class="highlight"><code class="language-bash">pipenv run pytest -q src/chapter-2/test_faulthandler.py -p no:faulthandler
+.                                                                              [100%]
+================================== warnings summary ==================================
+../../../.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/config/__init__.py:1230
+  /Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-DA9roatD/lib/python3.8/site-packages/_pytest/config/__init__.py:1230: PytestConfigWarning: Unknown config option: faulthandler_timeout
+
+    self._warn_or_fail_if_strict("Unknown config option: {}\n".format(key))
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+1 passed, 1 warning in 6.02s</code></pre>
+<p>可以看到，超时并不会触发回溯信息的打印。不过我们会得到一个告警，因为我们关闭了<code>faulthandler</code>插件，那么它定义的<code>faulthandler_timeout</code>配置将无法识别。</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>这个功能是从<a href="https://github.com/pytest-dev/pytest-faulthandler">pytest-faulthandler</a>插件合并而来的，但是有两点不同：</p>
+<ul>
+<li>去使能时，使用<code>-p no:faulthandler</code>代替原来的<code>--no-faulthandler</code>;</li>
+<li>使用<code>faulthandler_timeout</code>配置项代替<code>--faulthandler-timeout</code>命令行选项来配置超时时间。当然，你也可以使用<code>-o faulthandler_timeout=X</code>在命令行配置；</li>
+</ul>
+</div>
+<h2 id="junitxml">创建<code>JUnitXML</code>格式的测试报告<a class="headerlink" href="#junitxml" title="Permanent link">#</a></h2>
+<p>使用如下命令，可以在指定的<code>path</code>中创建一个能被<a href="https://jenkins.io/zh/">Jenkins</a>或者其他CI工具读取的<code>XML</code>格式的测试报告：</p>
+<pre class="highlight"><code class="language-bash">$ pytest --junitxml=path</code></pre>
+<p>你可以在项目的<code>pytest.ini</code>文件中，通过设置<code>junit_suite_name</code>的值，自定义<code>XML</code>文件中<code>testsuite</code>根节点的<code>name</code>信息：</p>
+<pre class="highlight"><code class="language-ini"># src/chapter-2/pytest.ini
+
+[pytest]
+junit_suite_name = pytest_chinese_doc</code></pre>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p><code>junit_suite_name</code>是 pytest 4.0 版本新增的配置项；</p>
+</div>
+<p>我们先来执行一个测试用例<code>test_nodeid.py::test_one</code>看看效果：</p>
+<pre class="highlight"><code class="language-bash">$  pipenv run pytest -q --junitxml=src/chapter-2/report/test_one.xml src/chapter-2/test_nodeid.py::test_one
+.                                                                              [100%]
+- generated xml file: /Users/yaomeng/Private/projects/pytest-chinese-doc/src/chapter-2/report/test_one.xml -
+1 passed in 0.02s</code></pre>
+<p>查看生成的<code>XML</code>文件：</p>
+<pre class="highlight"><code class="language-xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+
+&lt;testsuites&gt;
+  &lt;testsuite name="pytest_chinese_doc" errors="0" failures="0" skipped="0" tests="1" time="0.025" timestamp="2020-10-06T10:46:48.256695" hostname="yaomengdeMacBook-Air.local"&gt;
+    &lt;testcase classname="test_nodeid" name="test_one" time="0.001"/&gt;
+  &lt;/testsuite&gt;
+&lt;/testsuites&gt;</code></pre>
+<p>我们可以看到，<code>&lt;testsuite&gt;</code>节点的<code>name</code>属性的值，变为我们所期望的<code>pytest_chinese_doc</code>，而不是默认的<code>pytest</code>。</p>
+<p>JUnit XML规定<code>time</code>属性应该表明测试用例执行的全部耗时，包含<code>setup</code>和<code>teardown</code>中的操作，这也是pytest的默认行为；</p>
+<p>如果你只想记录测试用例执行的时间，只需要做如下配置：</p>
+<pre class="highlight"><code class="language-ini"># src/chapter-2/pytest.ini
+
+[pytest]
+junit_duration_report = call</code></pre>
+<h2 id="xml">在<code>XML</code>报告中为测试用例附加额外的子节点信息<a class="headerlink" href="#xml" title="Permanent link">#</a></h2>
+<p>我们有两种方式实现这个功能：</p>
+<ul>
+<li>
+<p>使用<code>record_property</code>  fixture：</p>
+<p>例如：为<code>test_xml_report::test_record_property</code>用例添加一个额外的<code>test_id</code>信息：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-2/test_xml_report.py
+
+def test_record_property(record_property):
+    record_property("test_id", 10010)</code></pre>
+<p>在<code>XML</code>文件中的表现为：<code>&lt;property name="test_id" value="10010"/&gt;</code>。</p>
+<pre class="highlight"><code class="language-xml">&lt;!-- src/chapter-2/report/test_record_property.xml --&gt;
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+
+&lt;testsuites&gt;
+  &lt;testsuite name="pytest_chinese_doc" errors="0" failures="0" skipped="0" tests="1" time="0.021" timestamp="2020-10-06T11:10:59.021407" hostname="yaomengdeMacBook-Air.local"&gt;
+    &lt;testcase classname="test_xml_report" name="test_record_property" time="0.000"&gt;
+      &lt;properties&gt;
+        &lt;property name="test_id" value="10010"/&gt;
+      &lt;/properties&gt;
+    &lt;/testcase&gt;
+  &lt;/testsuite&gt;
+&lt;/testsuites&gt;</code></pre>
+</li>
+<li>
+<p>新增一个自定义的标记<code>@pytest.mark.test_id()</code>:</p>
+<p>首先，在<code>conftest.py</code>文件中重载<code>pytest_collection_modifyitems</code>钩子方法，添加对<code>test_id</code>标记的支持：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-2/conftest.py
+
+def pytest_collection_modifyitems(items):
+    for item in items:
+        for marker in item.iter_markers(name="test_id"):
+            test_id = marker.args[0]
+            item.user_properties.append(("test_id", test_id))</code></pre>
+<p>然后，为测试用例添加新标记：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-2/test_xml_report.py
+
+import pytest
+
+
+@pytest.mark.test_id(10086)
+def test_marker_test_id():
+    pass</code></pre>
+<p>在<code>XML</code>文件中的表现也为：<code>&lt;property name="test_id" value="10086"/&gt;</code>。</p>
+<pre class="highlight"><code class="language-xml">&lt;?xml version="1.0" encoding="utf-8"?&gt;
+
+&lt;testsuites&gt;
+  &lt;testsuite name="pytest_chinese_doc" errors="0" failures="0" skipped="0" tests="2" time="0.025" timestamp="2020-10-06T11:23:30.388331" hostname="yaomengdeMacBook-Air.local"&gt;
+    &lt;testcase classname="test_xml_report" name="test_marker_test_id" time="0.000"&gt;
+      &lt;properties&gt;
+        &lt;property name="test_id" value="10086"/&gt;
+      &lt;/properties&gt;
+    &lt;/testcase&gt;
+    &lt;testcase classname="test_xml_report" name="test_record_property" time="0.000"&gt;
+      &lt;properties&gt;
+        &lt;property name="test_id" value="10010"/&gt;
+      &lt;/properties&gt;
+    &lt;/testcase&gt;
+  &lt;/testsuite&gt;
+&lt;/testsuites&gt;</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>这时我们会得到一个告警：</p>
+<p><pre class="highlight"><code class="language-bash">
+PytestUnknownMarkWarning: Unknown pytest.mark.test_id - is this a typo?  You can register custom marks to avoid this warning - for details, see https://docs.pytest.org/en/stable/mark.html
+    @pytest.mark.test_id(10010)</code></pre>
+这是因为我们没有在pytest中注册test_id标记，但不影响正常的执行；</p>
+<p>如果你想去除这个告警，只需要在配置文件中注册这个标记：
+<pre class="highlight"><code class="language-ini">[pytest]
+markers =
+    test_id: 为测试用例添加ID</code></pre></p>
+</div>
+</li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>从 pytest 6.0 版本开始，<code>--junit_family</code>命令行选项的默认值改成<code>xunit2</code>，这是对旧的<code>xunit1</code>格式的一种更新，默认情况下，操作此类文件的工具（Jenkins、Azure Pipelines等）均支持该格式。</p>
+<p>使用<code>xunit2</code>格式，只需要更新你的配置文件：</p>
+<pre class="highlight"><code class="language-ini">[pytest]
+junit_family=xunit2</code></pre>
+<p>如果你所使用的工具并不支持这种新格式，你也可以继续使用之前的格式：</p>
+<pre class="highlight"><code class="language-ini">[pytest]
+junit_family=legacy</code></pre>
+<p>目前已知的支持<code>xunit2</code>格式的工具有：</p>
+<ul>
+<li><a href="https://www.jenkins.io/">Jenkins</a> 并结合 <a href="https://plugins.jenkins.io/junit">JUnit</a> 插件；</li>
+<li><a href="https://azure.microsoft.com/en-us/services/devops/pipelines">Azure Pipelines</a>；</li>
+</ul>
+</div>
+<h2 id="xml_1">在<code>XML</code>报告中为测试用例附加额外的属性信息<a class="headerlink" href="#xml_1" title="Permanent link">#</a></h2>
+<p>可以通过<code>record_xml_attribute</code> fixture 为测试用例附加额外的<strong>属性</strong>，而不像<code>record_property</code>为其添加子节点；</p>
+<p>例如：为测试用例添加一个<code>test_id</code>属性，并修改原先的<code>classname</code>属性：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-2/test_xml_report.py
+
+def test_record_xml_attribute(record_xml_attribute):
+    record_xml_attribute("test_id", 10010)
+    record_xml_attribute("classname", "custom_classname")</code></pre>
+<p>在报告中的表现为<code>&lt;testcase classname="custom_classname" test_id="10010" ...</code>：</p>
+<pre class="highlight"><code class="language-xml">&lt;!-- src/chapter-2/report/test_record_xml_attribute.xml --&gt;
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+
+&lt;testsuites&gt;
+  &lt;testsuite name="pytest_chinese_doc" errors="0" failures="0" skipped="0" tests="1" time="0.024" timestamp="2020-10-06T14:58:12.006400" hostname="yaomengdeMacBook-Air.local"&gt;
+    &lt;testcase classname="custom_classname" name="test_record_xml_attribute" file="test_xml_report.py" line="12" test_id="10010" time="0.011"/&gt;
+  &lt;/testsuite&gt;
+&lt;/testsuites&gt;</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Warning<p><code>record_xml_attribute</code>目前是一个实验性的功能，未来可能被更强大的 API 所替代，但功能本身会被保留。</p>
+</p>
+</div>
+<h2 id="xml_2">在<code>XML</code>报告中为测试集附加额外的子节点信息<a class="headerlink" href="#xml_2" title="Permanent link">#</a></h2>
+<div class="admonition attention">
+<p class="admonition-title">Attention<p>pytest 4.5 版本新增功能</p>
+</p>
+</div>
+<p>可以通过自定义一个<code>session</code>作用域级别的 fixture，为测试集添加子节点信息，并且会作用于所有的测试用例；</p>
+<p>这个自定义的 fixture 需要调用另外一个<code>record_testsuite_property</code> fixture：</p>
+<p><code>record_testsuite_property</code>接收两个参数<code>name</code>和<code>value</code>以构成<code>&lt;property&gt;</code>标签，其中，<code>name</code>必须为字符串，<code>value</code>会转换为字符串并进行 XML 转义；</p>
+<pre class="highlight"><code class="language-python"># src/chapter-2/test_xml_report.py
+
+@pytest.fixture(scope="session")
+def log_global_env_facts(record_testsuite_property):
+    record_testsuite_property("EXECUTOR", "luizyao")
+    record_testsuite_property("LOCATION", "NJ")
+
+
+def test_testsuite_property(log_global_env_facts):
+    pass</code></pre>
+<p>生成的测试报告表现为：在<code>testsuite</code>节点中，多了一个<code>properties</code>子节点，包含所有新增的属性节点，而且，它和所有的<code>testcase</code>节点是平级的；</p>
+<pre class="highlight"><code class="language-xml">&lt;!-- src/chapter-2/report/test_testsuite_property.xml --&gt;
+
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+
+&lt;testsuites&gt;
+  &lt;testsuite name="pytest_chinese_doc" errors="0" failures="0" skipped="0" tests="1" time="0.022" timestamp="2020-10-06T15:07:49.768753" hostname="yaomengdeMacBook-Air.local"&gt;
+    &lt;properties&gt;
+      &lt;property name="EXECUTOR" value="luizyao"/&gt;
+      &lt;property name="LOCATION" value="NJ"/&gt;
+    &lt;/properties&gt;
+    &lt;testcase classname="test_xml_report" name="test_testsuite_property" file="test_xml_report.py" line="23" time="0.000"/&gt;
+  &lt;/testsuite&gt;
+&lt;/testsuites&gt;</code></pre>
+<p>这样生成的 XML 文件是符合最新的<code>xunit2</code>标准的，这点和<code>record_property</code>、<code>record_xml_attribute</code>正好相反。如果<code>junit_family=xunit2</code>，它们会触发告警：<em>PytestWarning: record_xml_attribute is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')</em>，而<code>record_testsuite_property</code>不会。</p>
+<h2 id="url-pastebin">为测试报告提供<code>URL</code>链接 -- <code>pastebin</code>服务<a class="headerlink" href="#url-pastebin" title="Permanent link">#</a></h2>
+<p>目前，只实现了在<a href="http://bpaste.net/">http://bpaste.net</a>上的展示功能；</p>
+<ul>
+<li>
+<p>为每一个失败的测试用例创建一个URL</p>
+<pre class="highlight"><code class="language-bash">pytest --pastebin=failed</code></pre>
+<p>也可以通过添加<code>-x</code>选项，只为第一个失败的测试用例创建一个URL；</p>
+</li>
+<li>
+<p>为所有的测试用例创建一个URL</p>
+<pre class="highlight"><code class="language-bash">pytest --pastebin=all</code></pre>
+</li>
+</ul>
+<h2 id="_16">尽早的加载插件<a class="headerlink" href="#_16" title="Permanent link">#</a></h2>
+<p>你可以在命令行中使用<code>-p</code>选项，来尽早的加载某一个插件：</p>
+<pre class="highlight"><code class="language-bash">pytest -p mypluginmodule</code></pre>
+<p><code>-p</code>选项接收一个<code>name</code>参数，这个参数可以为：</p>
+<ul>
+<li>
+<p>一个完整的本地插件引入，例如：<code>myproject.plugins</code>，其必须是可以<code>import</code>的。</p>
+</li>
+<li>
+<p>一个公共插件的名称，这是其注册时在<code>setuptools</code>中赋予的名字，例如：尽早的加<code>pytest-cov</code>插件：</p>
+<pre class="highlight"><code class="language-bash">pytest -p pytest_cov</code></pre>
+</li>
+</ul>
+<h2 id="_17">去使能插件<a class="headerlink" href="#_17" title="Permanent link">#</a></h2>
+<p>你可以在命令行中使用<code>-p</code>结合<code>no:</code>，来去使能一个插件的加载，例如：</p>
+<pre class="highlight"><code class="language-bash">pytest -p no:doctest</code></pre>
+<h2 id="pythonpytest">在<code>python</code>代码中调用<code>pytest</code><a class="headerlink" href="#pythonpytest" title="Permanent link">#</a></h2>
+<p>可以直接在代码中调用<code>pytest</code>：</p>
+<pre class="highlight"><code class="language-bash">pytest.main()</code></pre>
+<p>这和你在命令行中执行<code>pytest</code>几乎是一样的，但其也有以下特点：</p>
+<ul>
+<li>
+<p>不会触发<code>SystemExit</code>，而是返回<a href="#_2">exitcode</a>：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-2/test_via_main.py
+
+import time
+
+
+def test_one():
+    time.sleep(10)
+
+
+if __name__ == "__main__":
+    import pytest
+
+    ret = pytest.main(["-q", __file__])
+    print(
+        "pytest.main() 返回 pytest.ExitCode.INTERRUPTED：",
+        ret == pytest.ExitCode.INTERRUPTED,
+    )</code></pre>
+<p>用例中有等待10秒的操作，在这期间，打断执行（<code>Ctr+C</code>），<code>pytest.main()</code>返回的是<code>INTERRUPTED</code>状态码；</p>
+<pre class="highlight"><code class="language-bash">pipenv run python src/chapter-2/test_via_main.py
+^C
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/Users/yaomeng/Private/projects/pytest-chinese-doc/src/chapter-2/test_via_main.py:5: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+no tests ran in 1.38s
+pytest.main() 返回 pytest.ExitCode.INTERRUPTED： True</code></pre>
+</li>
+<li>
+<p>传递选项和参数：</p>
+<pre class="highlight"><code class="language-bash">pytest.main(["-x", "mytestdir"])</code></pre>
+</li>
+<li>
+<p>指定一个插件：</p>
+<pre class="highlight"><code class="language-python">import pytest
+
+
+class MyPlugin:
+    def pytest_sessionfinish(self):
+        print("*** test run reporting finishing")
+
+
+pytest.main(["-qq"], plugins=[MyPlugin()])</code></pre>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note<p>调用<code>pytest.main()</code>会引入你的测试文件以及其引用的所有模块。由于 python 引入机制的缓存特性，当这些文件发生变化时，后续再调用<code>pytest.main()</code>（在同一个程序执行过程中）时，并不会响应这些文件的变化。</p>
+<p>基于这个原因，我们不推荐在同一个程序中多次调用<code>pytest.main()</code>（例如：为了重新执行测试；如果你确实有这个需求，或许可以考虑<a href="https://pypi.org/project/pytest-repeat/">pytest-repeat</a>插件）；</p>
+</p>
+</div>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../%E4%B8%89%E3%80%81%E7%BC%96%E5%86%99%E6%96%AD%E8%A8%80/" class="btn btn-neutral float-right" title="三、编写断言">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85%E5%92%8C%E5%85%A5%E9%97%A8/" class="btn btn-neutral" title="一、安装和入门"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright &copy; 2020 <a href="https://github.com/luizyao">Yao Meng</a></p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/luizyao/pytest-chinese-doc" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85%E5%92%8C%E5%85%A5%E9%97%A8/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../%E4%B8%89%E3%80%81%E7%BC%96%E5%86%99%E6%96%AD%E8%A8%80/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

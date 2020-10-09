@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Yao Meng">
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>三、编写断言 - pytest 中文文档（v6.1.1）</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../../css/theme.css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "\u4e09\u3001\u7f16\u5199\u65ad\u8a00";
+    var mkdocs_page_input_path = "zh-Hans-CN/\u4e09\u3001\u7f16\u5199\u65ad\u8a00.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> pytest 中文文档（v6.1.1）</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">中文文档</span></p>
+                <ul class="current">
+                    <li class="toctree-l1"><a class="reference internal" href="../%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85%E5%92%8C%E5%85%A5%E9%97%A8/">一、安装和入门</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8%E5%92%8C%E8%B0%83%E7%94%A8/">二、使用和调用</a>
+                    </li>
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">三、编写断言</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#assert">使用assert编写断言</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_2">编写触发期望异常的断言</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_3">编写触发期望告警的断言</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_4">特殊数据结构比较时的优化</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_5">为失败断言添加自定义的说明</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_6">关于断言自省的细节</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_7">复写缓存文件</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_8">关闭断言自省</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">关于</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../about/license/">License</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">pytest 中文文档（v6.1.1）</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>中文文档 &raquo;</li>
+        
+      
+    
+    <li>三、编写断言</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="_1">编写断言<a class="headerlink" href="#_1" title="Permanent link">#</a></h1>
+<h2 id="assert">使用<code>assert</code>编写断言<a class="headerlink" href="#assert" title="Permanent link">#</a></h2>
+<p>pytest 允许你使用<code>python</code>标准的<code>assert</code>表达式写断言；</p>
+<p>例如：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-3/test_assert1.py
+
+def func(x):
+    return x + 1
+
+
+def test_function():
+    assert func(2) == 4</code></pre>
+<p>如果这个断言失败，你会看到<code>func(2)</code>实际的返回值<code>+ where 3 = func(2)</code>：</p>
+<pre class="highlight"><code class="language-bash">$ pipenv run pytest -q src/chapter-3/test_assert1.py
+F                                                                              [100%]
+====================================== FAILURES ======================================
+___________________________________ test_function ____________________________________
+
+    def test_function():
+&gt;       assert func(2) == 4
+E       assert 3 == 4
+E        +  where 3 = func(2)
+
+src/chapter-3/test_assert1.py:6: AssertionError
+============================== short test summary info ===============================
+FAILED src/chapter-3/test_assert1.py::test_function - assert 3 == 4
+1 failed in 0.15s</code></pre>
+<p><code>pytest</code>支持显示常见的<code>python</code>子表达式的值，包括：调用、属性、比较、二进制和一元运算符等，这允许你在没有模版代码参考的情况下，可以使用的<code>python</code>的数据结构，而无须担心自省丢失的问题。</p>
+<p>同时，你也可以为断言指定了一条说明信息，用于失败时的情况说明：</p>
+<pre class="highlight"><code class="language-bash">assert a % 2 == 0, "value was odd, should be even"</code></pre>
+<h2 id="_2">编写触发期望异常的断言<a class="headerlink" href="#_2" title="Permanent link">#</a></h2>
+<p>你可以使用<code>pytest.raises()</code>作为上下文管理器，来编写一个触发期望异常的断言。</p>
+<p>例如，我们有如下测试用例：</p>
+<pre class="highlight"><code class="language-python">import pytest
+
+
+def myfunc():
+    raise ValueError("Exception 123 raised")
+
+
+def test_match():
+    with pytest.raises(ValueError):
+        myfunc()</code></pre>
+<p>当用例没有返回<code>ValueError</code>或者没有异常返回时，断言判断失败；</p>
+<p>如果你希望同时访问异常的属性，可以这样：</p>
+<pre class="highlight"><code class="language-python">import pytest
+
+
+def myfunc():
+    raise ValueError("Exception 123 raised")
+
+
+def test_match():
+    with pytest.raises(ValueError) as excinfo:
+        myfunc()
+    assert '123' in str(excinfo.value)</code></pre>
+<p>其中，<code>excinfo</code>是<a href="https://docs.pytest.org/en/6.1.1/reference.html#exceptioninfo">ExceptionInfo</a>的一个实例，它封装了异常的信息；常用的属性包括：<code>.type</code>、<code>.value</code>和<code>.traceback</code>；</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>在上下文管理器的作用域中，raises代码必须是最后一行，否则，其后面的代码将不会执行；所以，如果上述例子改成：</p>
+<pre class="highlight"><code class="language-bash">def test_match():
+  with pytest.raises(ValueError) as excinfo:
+      myfunc()
+      assert '456' in str(excinfo.value)</code></pre>
+<p>则测试将永远成功，因为<code>assert '456' in str(excinfo.value)</code>并不会执行；</p>
+</div>
+<p>我们也可以给<code>pytest.raises()</code>传递一个关键字参数<code>match</code>，来测试异常的字符串表示<code>str(excinfo.value)</code>是否符合给定的正则表达式（和<code>unittest</code>中的<code>TestCase.assertRaisesRegexp</code>方法类似）：</p>
+<pre class="highlight"><code class="language-python">import pytest
+
+
+def myfunc():
+    raise ValueError("Exception 123 raised")
+
+
+def test_match():
+    with pytest.raises((ValueError, RuntimeError), match=r'.* 123 .*'):
+        myfunc()</code></pre>
+<p>pytest 实际调用的是<code>re.search()</code>方法来做上述检查。并且，<code>pytest.raises()</code>也支持检查多个期望异常（以元组的形式传递参数），我们只需要触发其中任意一个。</p>
+<p><code>pytest.raises</code>还有另外的一种使用形式。</p>
+<p>首先，我们来看一下它在源码中的定义：</p>
+<pre class="highlight"><code class="language-python"># _pytest/python_api.py
+
+def raises(  # noqa: F811
+    expected_exception: Union["Type[_E]", Tuple["Type[_E]", ...]],
+    *args: Any,
+    **kwargs: Any
+) -&gt; Union["RaisesContext[_E]", _pytest._code.ExceptionInfo[_E]]:</code></pre>
+<p>它接收一个位置参数<code>expected_exception</code>，一组可变参数<code>args</code>，一组关键字参数<code>kwargs</code>；</p>
+<p>接着看方法的主体内容：</p>
+<pre class="highlight"><code class="language-python"># _pytest/python_api.py
+
+    if isinstance(expected_exception, type):
+        excepted_exceptions = (expected_exception,)  # type: Tuple[Type[_E], ...]
+    else:
+        excepted_exceptions = expected_exception
+    for exc in excepted_exceptions:
+        if not isinstance(exc, type) or not issubclass(exc, BaseException):  # type: ignore[unreachable]
+            msg = "expected exception must be a BaseException type, not {}"  # type: ignore[unreachable]
+            not_a = exc.__name__ if isinstance(exc, type) else type(exc).__name__
+            raise TypeError(msg.format(not_a))
+
+    message = "DID NOT RAISE {}".format(expected_exception)
+
+    if not args:
+        match = kwargs.pop("match", None)  # type: Optional[Union[str, Pattern[str]]]
+        if kwargs:
+            msg = "Unexpected keyword arguments passed to pytest.raises: "
+            msg += ", ".join(sorted(kwargs))
+            msg += "\nUse context-manager form instead?"
+            raise TypeError(msg)
+        return RaisesContext(expected_exception, message, match)
+    else:
+        func = args[0]
+        if not callable(func):
+            raise TypeError(
+                "{!r} object (type: {}) must be callable".format(func, type(func))
+            )
+        try:
+            func(*args[1:], **kwargs)
+        except expected_exception as e:
+            # We just caught the exception - there is a traceback.
+            assert e.__traceback__ is not None
+            return _pytest._code.ExceptionInfo.from_exc_info(
+                (type(e), e, e.__traceback__)
+            )
+    fail(message)</code></pre>
+<p>我们可以看到，如果没有传入可变参数<code>args</code>，那么关键字参数<code>kwargs</code>只能包含<code>match</code>关键字，否则会上报<code>TypeError</code>异常。</p>
+<pre class="highlight"><code class="language-python">        match = kwargs.pop("match", None)  # type: Optional[Union[str, Pattern[str]]]
+        if kwargs:
+            msg = "Unexpected keyword arguments passed to pytest.raises: "
+            msg += ", ".join(sorted(kwargs))
+            msg += "\nUse context-manager form instead?"
+            raise TypeError(msg)</code></pre>
+<p>如果传入可变参数<code>args</code>，那么它的第一个参数必须是一个可调用的对象，否则会报<code>TypeError</code>异常；</p>
+<p>同时，它会把剩余的<code>args</code>参数和所有<code>kwargs</code>参数传递给这个可调用对象，然后检查这个对象执行之后是否触发指定异常。</p>
+<pre class="highlight"><code class="language-python">        func = args[0]
+        if not callable(func):
+            raise TypeError(
+                "{!r} object (type: {}) must be callable".format(func, type(func))
+            )
+        try:
+            func(*args[1:], **kwargs)
+        except expected_exception as e:
+            ...</code></pre>
+<p>所以我们有了一种新的写法：</p>
+<pre class="highlight"><code class="language-python">def f():
+    raise ValueError("123")
+
+pytest.raises(ValueError, f)</code></pre>
+<p>也可以传入一个<code>lambda</code>表达式：</p>
+<pre class="highlight"><code class="language-python">pytest.raises(ZeroDivisionError, lambda x: 1/x, 0)
+
+# 或者
+
+pytest.raises(ZeroDivisionError, lambda x: 1/x, x=0)</code></pre>
+<p>这个时候如果你再传递<code>match</code>参数，是不生效的，因为它只有在<code>if not args:</code>的时候生效；</p>
+<p><code>pytest.mark.xfail()</code>也可以接收一个<code>raises</code>参数，来判断用例是否因为一个具体的异常而导致失败：</p>
+<pre class="highlight"><code class="language-python">@pytest.mark.xfail(raises=IndexError)
+def test_f():
+    f()</code></pre>
+<p>如果<code>f()</code>触发一个<code>IndexError</code>异常，则用例标记为<code>xfailed</code>；如果没有，则正常执行<code>f()</code>；</p>
+<div class="admonition note">
+<p class="admonition-title">Note<ul>
+<li>如果<code>test_f</code>测试成功，用例的结果是<code>xpassed</code>，而不是<code>passed</code>；</li>
+<li><code>pytest.raises</code>适用于检查由代码故意引发的异常；而<code>@pytest.mark.xfail()</code>更适合用于记录一些未修复的 Bug；</li>
+</ul>
+</p>
+</div>
+<h2 id="_3">编写触发期望告警的断言<a class="headerlink" href="#_3" title="Permanent link">#</a></h2>
+<p>我们也可以利用<a href="https://docs.pytest.org/en/6.1.1/warnings.html#warns">pytest.warns</a>来编写触发期望告警的断言，它的用法和上面的<code>pytest.raises</code>非常相似。</p>
+<h2 id="_4">特殊数据结构比较时的优化<a class="headerlink" href="#_4" title="Permanent link">#</a></h2>
+<p>我们来看这个下面这个测试用例：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-3/test_special_compare.py
+
+def test_set_comparison():
+    set1 = set('1308')
+    set2 = set('8035')
+    assert set1 == set2
+
+
+def test_long_str_comparison():
+    str1 = 'show me codes'
+    str2 = 'show me money'
+    assert str1 == str2
+
+
+def test_dict_comparison():
+    dict1 = {
+        'x': 1,
+        'y': 2,
+    }
+    dict2 = {
+        'x': 1,
+        'y': 1,
+    }
+    assert dict1 == dict2</code></pre>
+<p>我们比较了三种数据结构：集合、字符串和字典，下面我们来执行测试：</p>
+<pre class="highlight"><code class="language-bash">$ pipenv run pytest -q src/chapter-3/test_special_compare.py
+FFF                                                                            [100%]
+====================================== FAILURES ======================================
+________________________________ test_set_comparison _________________________________
+
+    def test_set_comparison():
+        set1 = set("1308")
+        set2 = set("8035")
+&gt;       assert set1 == set2
+E       AssertionError: assert {'0', '1', '3', '8'} == {'0', '3', '5', '8'}
+E         Extra items in the left set:
+E         '1'
+E         Extra items in the right set:
+E         '5'
+E         Full diff:
+E         - {'8', '3', '5', '0'}
+E         + {'3', '8', '1', '0'}
+
+src/chapter-3/test_special_compare.py:4: AssertionError
+______________________________ test_long_str_comparison ______________________________
+
+    def test_long_str_comparison():
+        str1 = "show me codes"
+        str2 = "show me money"
+&gt;       assert str1 == str2
+E       AssertionError: assert 'show me codes' == 'show me money'
+E         - show me money
+E         ?         ^ ^ ^
+E         + show me codes
+E         ?         ^ ^ ^
+
+src/chapter-3/test_special_compare.py:10: AssertionError
+________________________________ test_dict_comparison ________________________________
+
+    def test_dict_comparison():
+        dict1 = {
+            "x": 1,
+            "y": 2,
+        }
+        dict2 = {
+            "x": 1,
+            "y": 1,
+        }
+&gt;       assert dict1 == dict2
+E       AssertionError: assert {'x': 1, 'y': 2} == {'x': 1, 'y': 1}
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'y': 2} != {'y': 1}
+E         Full diff:
+E         - {'x': 1, 'y': 1}
+E         ?               ^
+E         + {'x': 1, 'y': 2}...
+E
+E         ...Full output truncated (2 lines hidden), use '-vv' to show
+
+src/chapter-3/test_special_compare.py:22: AssertionError
+============================== short test summary info ===============================
+FAILED src/chapter-3/test_special_compare.py::test_set_comparison - AssertionError:...
+FAILED src/chapter-3/test_special_compare.py::test_long_str_comparison - AssertionE...
+FAILED src/chapter-3/test_special_compare.py::test_dict_comparison - AssertionError...
+3 failed in 0.13s</code></pre>
+<p>针对一些特殊的数据结构间的比较，pytest 对结果的显示做了一些优化：</p>
+<ul>
+<li>集合、列表等：标记出第一个不同的元素；</li>
+<li>字符串：标记出不同的部分；</li>
+<li>字典：标记出不同的条目；</li>
+</ul>
+<h2 id="_5">为失败断言添加自定义的说明<a class="headerlink" href="#_5" title="Permanent link">#</a></h2>
+<p>我们来看下面这个测试用例：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-3/test_foo_compare.py
+
+class Foo:
+    def __init__(self, val):
+        self.val = val
+
+    def __eq__(self, other):
+        return self.val == other.val
+
+
+def test_foo_compare():
+    f1 = Foo(1)
+    f2 = Foo(2)
+    assert f1 == f2</code></pre>
+<p>我们定义了一个<code>Foo</code>对象，也复写了它的<code>__eq__()</code>方法，但当我们执行这个用例时：</p>
+<pre class="highlight"><code class="language-bash">$ pipenv run pytest -q src/chapter-3/test_foo_compare.py
+F                                                                              [100%]
+====================================== FAILURES ======================================
+__________________________________ test_foo_compare __________________________________
+
+    def test_foo_compare():
+        f1 = Foo(1)
+        f2 = Foo(2)
+&gt;       assert f1 == f2
+E       assert &lt;test_foo_compare.Foo object at 0x1076bf250&gt; == &lt;test_foo_compare.Foo object at 0x1076bf6a0&gt;
+
+src/chapter-3/test_foo_compare.py:12: AssertionError
+============================== short test summary info ===============================
+FAILED src/chapter-3/test_foo_compare.py::test_foo_compare - assert &lt;test_foo_compa...
+1 failed in 0.12s</code></pre>
+<p>我们并不能直观的从中看出来失败的原因：<code>assert &lt;test_foo_compare.Foo object at 0x1076bf250&gt; == &lt;test_foo_compare.Foo object at 0x1076bf6a0&gt;</code>。</p>
+<p>在这种情况下，我们有两种优化的方法：</p>
+<ul>
+<li>
+<p>复写<code>Foo</code>的<code>__repr__()</code>方法：</p>
+<pre class="highlight"><code class="language-python">def __repr__(self):
+    return str(self.val)</code></pre>
+<p>我们再执行用例：</p>
+<pre class="highlight"><code class="language-bash">$ pipenv run pytest -q src/chapter-3/test_foo_compare.py
+F                                                                              [100%]
+====================================== FAILURES ======================================
+__________________________________ test_foo_compare __________________________________
+
+    def test_foo_compare():
+        f1 = Foo(1)
+        f2 = Foo(2)
+&gt;       assert f1 == f2
+E       assert 1 == 2
+
+src/chapter-3/test_foo_compare.py:15: AssertionError
+============================== short test summary info ===============================
+FAILED src/chapter-3/test_foo_compare.py::test_foo_compare - assert 1 == 2</code></pre>
+<p>这时，我们能看到失败的原因是因为<code>1 == 2</code>不成立；</p>
+<div class="admonition note">
+<p class="admonition-title">Note<p>至于__str__()和__repr__()的区别，可以参考StackFlow上的这个问题中的回答：<a href="https://stackoverflow.com/questions/1436703/difference-between-str-and-repr">https://stackoverflow.com/questions/1436703/difference-between-str-and-repr</a></p>
+</p>
+</div>
+</li>
+<li>
+<p>使用<code>pytest_assertrepr_compare</code>这个钩子方法添加自定义的失败说明：</p>
+<pre class="highlight"><code class="language-python"># src/chapter-3/conftest.py
+
+from test_foo_compare import Foo
+
+
+def pytest_assertrepr_compare(op, left, right):
+    if isinstance(left, Foo) and isinstance(right, Foo) and op == "==":
+        return [
+            "比较两个Foo实例:",  # 顶头写概要
+            "   值: {} != {}".format(left.val, right.val),  # 除了第一个行，其余都可以缩进
+        ]</code></pre>
+<p>我们再次执行用例：</p>
+<pre class="highlight"><code class="language-bas">$ pipenv run pytest -q src/chapter-3/test_foo_compare.py
+F                                                                              [100%]
+====================================== FAILURES ======================================
+__________________________________ test_foo_compare __________________________________
+
+    def test_foo_compare():
+        f1 = Foo(1)
+        f2 = Foo(2)
+&gt;       assert f1 == f2
+E       assert 比较两个Foo实例:
+E            值: 1 != 2
+
+src/chapter-3/test_foo_compare.py:15: AssertionError
+============================== short test summary info ===============================
+FAILED src/chapter-3/test_foo_compare.py::test_foo_compare - assert 比较两个Foo实例:
+1 failed in 0.11s</code></pre>
+<p>我们会看到一个更友好的失败说明；</p>
+</li>
+</ul>
+<h2 id="_6">关于断言自省的细节<a class="headerlink" href="#_6" title="Permanent link">#</a></h2>
+<p>当断言失败时，pytest 为我们提供了非常人性化的失败说明，中间往往夹杂着相应变量的自省信息，这个我们称为断言的自省；</p>
+<p>那么，pytest 是如何做到这样的：</p>
+<ul>
+<li>pytest 发现测试模块，并引入他们，与此同时，pytest 会复写断言语句，添加自省信息；但是，不是测试模块的断言语句并不会被复写；</li>
+</ul>
+<h3 id="_7">复写缓存文件<a class="headerlink" href="#_7" title="Permanent link">#</a></h3>
+<p>pytest 会把被复写的模块存储到本地作为缓存使用，你可以通过在测试用例的根文件夹中的<code>conftest.py</code>里添加如下配置来禁止这种行为；</p>
+<pre class="highlight"><code class="language-python">import sys
+
+sys.dont_write_bytecode = True</code></pre>
+<p>但是，它并不会妨碍你享受断言自省的好处，只是不会在本地存储<code>.pyc</code>文件了。</p>
+<h3 id="_8">关闭断言自省<a class="headerlink" href="#_8" title="Permanent link">#</a></h3>
+<p>你可以通过一下两种方法：</p>
+<ul>
+<li>在模块的<code>docstring</code>中添加<code>PYTEST_DONT_REWRITE</code>字符串；</li>
+<li>执行 pytest 时，添加<code>--assert=plain</code>选项；</li>
+</ul>
+<p>我们来看一下关闭后的效果：</p>
+<pre class="highlight"><code class="language-bash">pipenv run pytest -q --assert=plain src/chapter-3/test_foo_compare.py
+F                                                                              [100%]
+====================================== FAILURES ======================================
+__________________________________ test_foo_compare __________________________________
+
+    def test_foo_compare():
+        f1 = Foo(1)
+        f2 = Foo(2)
+&gt;       assert f1 == f2
+E       AssertionError
+
+src/chapter-3/test_foo_compare.py:15: AssertionError
+============================== short test summary info ===============================
+FAILED src/chapter-3/test_foo_compare.py::test_foo_compare - AssertionError
+1 failed in 0.12s</code></pre>
+<p>断言失败时的信息就非常的不完整了，我们几乎看不出任何有用的调试信息；</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../about/license/" class="btn btn-neutral float-right" title="License">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8%E5%92%8C%E8%B0%83%E7%94%A8/" class="btn btn-neutral" title="二、使用和调用"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright &copy; 2020 <a href="https://github.com/luizyao">Yao Meng</a></p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/luizyao/pytest-chinese-doc" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8%E5%92%8C%E8%B0%83%E7%94%A8/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../../about/license/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
