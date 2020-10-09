@@ -21,7 +21,7 @@
 
 ## 在线文档
 
-<https://pytest-chinese-doc.readthedocs.io/>
+<https://luizyao.github.io/pytest-chinese-doc/>
 
 ## 其它获取途径
 
