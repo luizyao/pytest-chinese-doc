@@ -21,7 +21,9 @@
 
 ## 在线文档
 
-<https://luizyao.github.io/pytest-chinese-doc/>
+Github Pages: <https://luizyao.github.io/pytest-chinese-doc/>
+
+Gitee Pages: <https://luizyao.gitee.io/pytest-chinese-doc>
 
 ## 其它获取途径
 
