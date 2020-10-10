@@ -1,4 +1,4 @@
-name: Build and Deploy Github Pages
+name: Build and Deploy Github&Gitee Pages
 
 on:
   push:
@@ -37,3 +37,19 @@ jobs:
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: site # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
+
+      - name: Sync to Gitee
+        uses: wearerequired/git-mirror-action@master
+        env:
+            SSH_PRIVATE_KEY: ${{ secrets.GITEE_RSA_PRIVATE_KEY }}
+        with:
+            source-repo: "git@github.com:luizyao/pytest-chinese-doc.git"
+            destination-repo: "git@gitee.com:luizyao/pytest-chinese-doc.git"
+
+      - name: Build Gitee Pages
+        uses: yanglbme/gitee-pages-action@master
+        with:
+            gitee-username: luizyao
+            gitee-password: ${{ secrets.GITEE_PASSWORD }}
+            gitee-repo: luizyao/pytest-chinese-doc
+            branch: 6.1.1
