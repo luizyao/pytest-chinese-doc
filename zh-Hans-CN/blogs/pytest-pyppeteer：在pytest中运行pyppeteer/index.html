@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Yao Meng">
+  
+  <link rel="shortcut icon" href="../../../img/favicon.ico">
+  <title>pytest-pyppeteer：在pytest中运行pyppeteer - pytest 中文文档（v6.1.1）</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700" />
+
+  <link rel="stylesheet" href="../../../css/theme.css" />
+  <link rel="stylesheet" href="../../../css/theme_extra.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" />
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "pytest-pyppeteer\uff1a\u5728pytest\u4e2d\u8fd0\u884cpyppeteer";
+    var mkdocs_page_input_path = "zh-Hans-CN/blogs/pytest-pyppeteer\uff1a\u5728pytest\u4e2d\u8fd0\u884cpyppeteer.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+        <a href="../../.." class="icon icon-home"> pytest 中文文档（v6.1.1）</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../..">首页</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">中文文档</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85%E5%92%8C%E5%85%A5%E9%97%A8/">一、安装和入门</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../%E4%BA%8C%E3%80%81%E4%BD%BF%E7%94%A8%E5%92%8C%E8%B0%83%E7%94%A8/">二、使用和调用</a>
+                    </li>
+                    <li class="toctree-l1"><a class="reference internal" href="../../%E4%B8%89%E3%80%81%E7%BC%96%E5%86%99%E6%96%AD%E8%A8%80/">三、编写断言</a>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">博客</span></p>
+                <ul class="current">
+                    <li class="toctree-l1 current"><a class="reference internal current" href="./">pytest-pyppeteer：在pytest中运行pyppeteer</a>
+    <ul class="current">
+    </ul>
+                    </li>
+                </ul>
+                <p class="caption"><span class="caption-text">关于</span></p>
+                <ul>
+                    <li class="toctree-l1"><a class="reference internal" href="../../../about/license/">License</a>
+                    </li>
+                </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../..">pytest 中文文档（v6.1.1）</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>博客 &raquo;</li>
+        
+      
+    
+    <li>pytest-pyppeteer：在pytest中运行pyppeteer</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="pytest-pyppeteer">pytest-pyppeteer<a class="headerlink" href="#pytest-pyppeteer" title="Permanent link">#</a></h1>
+<p><a href="https://github.com/luizyao/pytest-pyppeteer">pytest-pyppeteer</a>是我写的一个 pytest 插件，支持在 pytest 中运行<a href="https://github.com/pyppeteer/pyppeteer">pyppeteer</a>，起因是为了解决工作中的一个测试需求，现在将其开源并做简单介绍。</p>
+<h1 id="_1">背景<a class="headerlink" href="#_1" title="Permanent link">#</a></h1>
+<h2 id="selenium">为什么不用 selenium？<a class="headerlink" href="#selenium" title="Permanent link">#</a></h2>
+<p>主要的原因是 selenium 的配置比较繁琐，最常见的问题是需要保持 webdriver 和浏览器版本的一致性。</p>
+<h2 id="pyppeteer">pyppeteer 的简单介绍<a class="headerlink" href="#pyppeteer" title="Permanent link">#</a></h2>
+<p>pyppeteer 是 <a href="https://github.com/puppeteer/puppeteer/">puppeteer</a>的非官方 python 版本，几乎实现了和其相同的 API，可以非常方便的去操作 Chrome 浏览器。</p>
+<h3 id="pyppeteer_1">pyppeteer 的局限性<a class="headerlink" href="#pyppeteer_1" title="Permanent link">#</a></h3>
+<p>目前最明显的问题是没有提供跨浏览器的解决方案，最新的 puppeteer 已经提供对 Firefox 的支持，但是 pyppeteer 可能还需要一些时间。</p>
+<h1 id="_2">安装<a class="headerlink" href="#_2" title="Permanent link">#</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>推荐使用<a href="https://github.com/pypa/pipenv">pipenv</a>管理虚拟环境，并替换为国内 pip 源。</p>
+</div>
+<pre class="highlight"><code class="language-bash">$ pipenv install pytest-pyppeteer</code></pre>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>仅支持 python &gt;= 3.7</p>
+</div>
+<h1 id="_3">快速开始<a class="headerlink" href="#_3" title="Permanent link">#</a></h1>
+<p>用下面这个测试用例来说明：断言电影《活着》的豆瓣评分大于 9.0。</p>
+<pre class="highlight"><code class="language-python">from dataclasses import dataclass
+
+from pytest_pyppeteer.models import Browser
+
+
+@dataclass(init=False)
+class Elements:
+    """收集所有使用到的页面元素，可以为 XPath 或者 CSS Selector。"""
+
+    # 查询输入框
+    query = "#inp-query"
+
+    # 点击搜索
+    apply = ".inp-btn &gt; input:nth-child(1)"
+
+    # 第一条结果
+    first_result = (
+        "#root &gt; div &gt; div &gt; div &gt; div &gt; div:nth-child(1) &gt; div.item-root a.cover-link"
+    )
+
+    # 评分
+    rating = (
+        "#interest_sectl &gt; div.rating_wrap.clearbox &gt; div.rating_self.clearfix &gt; strong"
+    )
+
+
+async def test_lifetimes(pyppeteer: Browser):
+    page = await pyppeteer.new_page()
+    await page.goto('https://movie.douban.com/')
+
+    await page.type(Elements.query, "活着")
+    await page.click(Elements.apply)
+
+    await page.waitfor(Elements.first_result)
+    await page.click(Elements.first_result)
+
+    await page.waitfor(Elements.rating)
+    rating = await page.get_value(Elements.rating)
+
+    assert float(rating) &gt;= 9.0</code></pre>
+<p>执行测试用例，看一下效果：</p>
+<p><img alt="断言电影《活着》的豆瓣评分大于 9.0" src="/img/pytest_pyppeteer_movie_lifetimes.gif" /></p>
+<p>这里我们无需指定浏览器的路径，pytest-pyppeteer 会在对应平台默认的安装路径下搜寻 Chrome 的可执行文件。</p>
+<p>也可以通过 <code>--executable-path</code>命令行选项显示的指定 Chrome 的路径。</p>
+<p>或者，在你的<code>conftest.py</code>文件中指定:</p>
+<pre class="highlight"><code class="language-python">@pytest.fixture(scope="session")
+def executable_path(executable_path):
+    if executable_path is None:
+        return "path/to/Chrome/or/Chromium"
+    return executable_path</code></pre>
+<p>其它支持的命令行选项，包括：</p>
+<ul>
+<li>
+<p><code>--headless</code>：使用浏览器的无头模式；</p>
+</li>
+<li>
+<p><code>--args</code>：为浏览器指定其它参数。例如：指定代理服务器：</p>
+<pre class="highlight"><code class="language-bash">$ pytest --args proxy-server "localhost:5555,direct://" --args proxy-bypass-list "192.0.0.1/8;10.0.0.1/8"</code></pre>
+</li>
+<li>
+<p><code>--window-size</code>：指定浏览器的大小，默认是 800*600；<code>--window-size 0 0</code>表示最大化浏览器；</p>
+</li>
+</ul>
+<h1 id="_4">同时操作多个浏览器<a class="headerlink" href="#_4" title="Permanent link">#</a></h1>
+<p>用下面这个测试用例来说明：断言书籍《活着》的豆瓣评分高于其电影的评分。</p>
+<pre class="highlight"><code class="language-python">import asyncio
+from dataclasses import dataclass
+
+from pytest_pyppeteer.models import Browser, Page
+
+
+@dataclass(init=False)
+class Elements:
+    """公共对象库"""
+
+    query = "#inp-query"
+    apply = ".inp-btn &gt; input:nth-child(1)"
+
+
+@dataclass(init=False)
+class BookElements(Elements):
+    url = "https://book.douban.com/"
+
+    first_result = '(//*[@class="item-root"]/a)[1]'
+    rating = "#interest_sectl &gt; div &gt; div.rating_self.clearfix &gt; strong"
+
+
+@dataclass(init=False)
+class MovieElements(Elements):
+    url = "https://movie.douban.com/"
+
+    first_result = (
+        "#root &gt; div &gt; div &gt; div &gt; div &gt; div:nth-child(1) &gt; div.item-root a.cover-link"
+    )
+    rating = (
+        "#interest_sectl &gt; div.rating_wrap.clearbox &gt; div.rating_self.clearfix &gt; strong"
+    )
+
+
+async def query_rating(pyppeteer: Browser, name: str, elements: Elements):
+    """获取电影或者书籍的评分。"""
+
+    page: Page = await pyppeteer.new_page()
+
+    await page.goto(elements.url)
+
+    await page.type(elements.query, name)
+    await page.click(elements.apply)
+
+    await page.waitfor(elements.first_result)
+    await page.click(elements.first_result)
+
+    await page.waitfor(elements.rating)
+    rating = await page.get_value(elements.rating)
+
+    return rating
+
+
+async def test_multiple_pyppeteer(pyppeteer_factory):
+    pyppeteer1 = await pyppeteer_factory()
+    pyppeteer2 = await pyppeteer_factory()
+
+    movie_rating, book_rating = await asyncio.gather(
+        query_rating(pyppeteer1, "活着", MovieElements),
+        query_rating(pyppeteer2, "活着", BookElements)
+    )
+
+    assert book_rating &gt;= movie_rating</code></pre>
+<p>通过<code>pyppeteer_factory</code> 可以获取多个浏览器实例，分别执行不同的操作，再利用 python 标准库<code>asyncio</code>可以很方便的进行异步调用，节省时间。</p>
+<p>执行测试用例，看一下效果：</p>
+<p><img alt="断言书籍《活着》的豆瓣评分高于其电影的评分" src="/img/pytest_pyppeteer_book_movie_lifetimes.gif" /></p>
+<h1 id="github">Github 仓库<a class="headerlink" href="#github" title="Permanent link">#</a></h1>
+<p>更多功能可以访问：<a href="https://github.com/luizyao/pytest-pyppeteer">https://github.com/luizyao/pytest-pyppeteer</a>，如果能帮助到你的话，可以给个 star，也欢迎提 issue 和 pr。</p>
+<h1 id="pytest-v611">pytest 中文文档(v6.1.1)<a class="headerlink" href="#pytest-v611" title="Permanent link">#</a></h1>
+<p>之前翻译过 pytest v5.1.3 的官方文档并开源，目前计划更新到 v6.1.1 版本。</p>
+<p>项目更多进度可以访问：<a href="https://github.com/luizyao/pytest-chinese-doc/tree/6.1.1">https://github.com/luizyao/pytest-chinese-doc/tree/6.1.1</a></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../../about/license/" class="btn btn-neutral float-right" title="License">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../../%E4%B8%89%E3%80%81%E7%BC%96%E5%86%99%E6%96%AD%E8%A8%80/" class="btn btn-neutral" title="三、编写断言"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>Copyright &copy; 2020 <a href="https://github.com/luizyao">Yao Meng</a></p>
+    
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/luizyao/pytest-chinese-doc" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../../%E4%B8%89%E3%80%81%E7%BC%96%E5%86%99%E6%96%AD%E8%A8%80/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../../../about/license/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
