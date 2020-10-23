@@ -29,6 +29,6 @@ Gitee Pages: <https://luizyao.gitee.io/pytest-chinese-doc>
 
 - 关注微信公众号【小鹿的先森】，回复【pytest】：
 
-    ![wechat](img/wechat.jpg)
+    ![wechat](/img/wechat.jpg)
 
 - 博客园：<https://www.cnblogs.com/luizyao/p/11771740.html>
