@@ -30,7 +30,10 @@
 ## 主要新加及修订的内容（v5.1.3 -> v6.1.1）
 
 - `--pdb`加载[ipython](https://ipython.org/)环境作为诊断器：[查看](zh-Hans-CN/二、使用和调用/#_13)
+
 - `--durations-min`默认值从`0.01`秒修改成`0.005`秒：[查看](zh-Hans-CN/二、使用和调用/#_14)
+
 - `--junit_family`命令行选项的默认值改成`xunit2`：[查看](zh-Hans-CN/二、使用和调用/#xml)
+
 - 移除了对`--resultlog`命令行选项的支持：[查看](https://docs.pytest.org/en/stable/deprecations.html#result-log-result-log)
 

@@ -79,11 +79,11 @@ async def test_lifetimes(pyppeteer: Browser):
 
 执行测试用例，看一下效果：
 
-![断言电影《活着》的豆瓣评分大于 9.0](/img/pytest_pyppeteer_movie_lifetimes.gif)
+![断言电影《活着》的豆瓣评分大于 9.0](../img/pytest_pyppeteer_movie_lifetimes.gif)
 
 这里我们无需指定浏览器的路径，pytest-pyppeteer 会在对应平台默认的安装路径下搜寻 Chrome 的可执行文件。
 
-也可以通过 `--executable-path`命令行选项显示的指定 Chrome 的路径。
+也可以通过 `--executable-path`命令行选项显式的指定 Chrome 的路径。
 
 或者，在你的`conftest.py`文件中指定:
 
@@ -181,7 +181,7 @@ async def test_multiple_pyppeteer(pyppeteer_factory):
 
 执行测试用例，看一下效果：
 
-![断言书籍《活着》的豆瓣评分高于其电影的评分](/img/pytest_pyppeteer_book_movie_lifetimes.gif)
+![断言书籍《活着》的豆瓣评分高于其电影的评分](../img/pytest_pyppeteer_book_movie_lifetimes.gif)
 
 # Github 仓库
 

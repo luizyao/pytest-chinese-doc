@@ -12,11 +12,11 @@ theme:
 nav:
   - 首页: index.md
   - 中文文档:
-    - 一、安装和入门: zh-Hans-CN/一、安装和入门.md
-    - 二、使用和调用: zh-Hans-CN/二、使用和调用.md
-    - 三、编写断言: zh-Hans-CN/三、编写断言.md
+    - 一、安装和入门: 一、安装和入门.md
+    - 二、使用和调用: 二、使用和调用.md
+    - 三、编写断言: 三、编写断言.md
   - 博客:
-    - pytest-pyppeteer：在pytest中运行pyppeteer: zh-Hans-CN/blogs/pytest-pyppeteer：在pytest中运行pyppeteer.md
+    - pytest-pyppeteer：在pytest中运行pyppeteer: blog/pytest-pyppeteer：在pytest中运行pyppeteer.md
   - 关于:
     - License: about/license.md
 
