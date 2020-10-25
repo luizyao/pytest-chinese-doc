@@ -64,6 +64,28 @@
                 <ul class="current">
                     <li class="toctree-l1 current"><a class="reference internal current" href="./">pytest-pyppeteer：在pytest中运行pyppeteer</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#_1">背景</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#selenium">为什么不用 selenium？</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#pyppeteer">pyppeteer 的简单介绍</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#pyppeteer_1">pyppeteer 的局限性</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_2">安装</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_3">快速开始</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_4">同时操作多个浏览器</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#github">Github 仓库</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#pytest-v611">pytest 中文文档(v6.1.1)</a>
+    </li>
     </ul>
                     </li>
                 </ul>
@@ -110,14 +132,14 @@
               
                 <h1 id="pytest-pyppeteerpytestpyppeteer">pytest-pyppeteer：在pytest中运行pyppeteer<a class="headerlink" href="#pytest-pyppeteerpytestpyppeteer" title="Permanent link">#</a></h1>
 <p><a href="https://github.com/luizyao/pytest-pyppeteer">pytest-pyppeteer</a>是我写的一个 pytest 插件，支持在 pytest 中运行<a href="https://github.com/pyppeteer/pyppeteer">pyppeteer</a>，起因是为了解决工作中的一个测试需求，现在将其开源并做简单介绍。</p>
-<h1 id="_1">背景<a class="headerlink" href="#_1" title="Permanent link">#</a></h1>
-<h2 id="selenium">为什么不用 selenium？<a class="headerlink" href="#selenium" title="Permanent link">#</a></h2>
+<h2 id="_1">背景<a class="headerlink" href="#_1" title="Permanent link">#</a></h2>
+<h3 id="selenium">为什么不用 selenium？<a class="headerlink" href="#selenium" title="Permanent link">#</a></h3>
 <p>主要的原因是 selenium 的配置比较繁琐，最常见的问题是需要保持 webdriver 和浏览器版本的一致性。</p>
-<h2 id="pyppeteer">pyppeteer 的简单介绍<a class="headerlink" href="#pyppeteer" title="Permanent link">#</a></h2>
+<h3 id="pyppeteer">pyppeteer 的简单介绍<a class="headerlink" href="#pyppeteer" title="Permanent link">#</a></h3>
 <p>pyppeteer 是 <a href="https://github.com/puppeteer/puppeteer/">puppeteer</a>的非官方 python 版本，几乎实现了和其相同的 API，可以非常方便的去操作 Chrome 浏览器。</p>
-<h3 id="pyppeteer_1">pyppeteer 的局限性<a class="headerlink" href="#pyppeteer_1" title="Permanent link">#</a></h3>
+<h4 id="pyppeteer_1">pyppeteer 的局限性<a class="headerlink" href="#pyppeteer_1" title="Permanent link">#</a></h4>
 <p>目前最明显的问题是没有提供跨浏览器的解决方案，最新的 puppeteer 已经提供对 Firefox 的支持，但是 pyppeteer 可能还需要一些时间。</p>
-<h1 id="_2">安装<a class="headerlink" href="#_2" title="Permanent link">#</a></h1>
+<h2 id="_2">安装<a class="headerlink" href="#_2" title="Permanent link">#</a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>推荐使用<a href="https://github.com/pypa/pipenv">pipenv</a>管理虚拟环境，并替换为国内 pip 源。</p>
@@ -127,7 +149,7 @@
 <p class="admonition-title">Attention</p>
 <p>仅支持 python &gt;= 3.7</p>
 </div>
-<h1 id="_3">快速开始<a class="headerlink" href="#_3" title="Permanent link">#</a></h1>
+<h2 id="_3">快速开始<a class="headerlink" href="#_3" title="Permanent link">#</a></h2>
 <p>用下面这个测试用例来说明：断言电影《活着》的豆瓣评分大于 9.0。</p>
 <pre class="highlight"><code class="language-python">from dataclasses import dataclass
 
@@ -192,7 +214,7 @@ def executable_path(executable_path):
 <p><code>--window-size</code>：指定浏览器的大小，默认是 800*600；<code>--window-size 0 0</code>表示最大化浏览器；</p>
 </li>
 </ul>
-<h1 id="_4">同时操作多个浏览器<a class="headerlink" href="#_4" title="Permanent link">#</a></h1>
+<h2 id="_4">同时操作多个浏览器<a class="headerlink" href="#_4" title="Permanent link">#</a></h2>
 <p>用下面这个测试用例来说明：断言书籍《活着》的豆瓣评分高于其电影的评分。</p>
 <pre class="highlight"><code class="language-python">import asyncio
 from dataclasses import dataclass
@@ -260,9 +282,9 @@ async def test_multiple_pyppeteer(pyppeteer_factory):
 <p>通过<code>pyppeteer_factory</code> 可以获取多个浏览器实例，分别执行不同的操作，再利用 python 标准库<code>asyncio</code>可以很方便的进行异步调用，节省时间。</p>
 <p>执行测试用例，看一下效果：</p>
 <p><img alt="断言书籍《活着》的豆瓣评分高于其电影的评分" src="../../img/pytest_pyppeteer_book_movie_lifetimes.gif" /></p>
-<h1 id="github">Github 仓库<a class="headerlink" href="#github" title="Permanent link">#</a></h1>
+<h2 id="github">Github 仓库<a class="headerlink" href="#github" title="Permanent link">#</a></h2>
 <p>更多功能可以访问：<a href="https://github.com/luizyao/pytest-pyppeteer">https://github.com/luizyao/pytest-pyppeteer</a>，如果能帮助到你的话，可以给个 star，也欢迎提 issue 和 pr。</p>
-<h1 id="pytest-v611">pytest 中文文档(v6.1.1)<a class="headerlink" href="#pytest-v611" title="Permanent link">#</a></h1>
+<h2 id="pytest-v611">pytest 中文文档(v6.1.1)<a class="headerlink" href="#pytest-v611" title="Permanent link">#</a></h2>
 <p>之前翻译过 pytest v5.1.3 的官方文档并开源，目前计划更新到 v6.1.1 版本。</p>
 <p>项目更多进度可以访问：<a href="https://github.com/luizyao/pytest-chinese-doc/tree/6.1.1">https://github.com/luizyao/pytest-chinese-doc/tree/6.1.1</a></p>
               
