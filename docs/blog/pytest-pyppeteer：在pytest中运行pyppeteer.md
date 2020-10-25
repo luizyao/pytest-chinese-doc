@@ -1,4 +1,4 @@
-# pytest-pyppeteer
+# pytest-pyppeteer：在pytest中运行pyppeteer
 
 [pytest-pyppeteer](https://github.com/luizyao/pytest-pyppeteer)是我写的一个 pytest 插件，支持在 pytest 中运行[pyppeteer](https://github.com/pyppeteer/pyppeteer)，起因是为了解决工作中的一个测试需求，现在将其开源并做简单介绍。
 
