@@ -132,7 +132,7 @@ def test_two():
 现在，我们来执行这两个用例（当前虚拟环境的`python`版本为`3.7.3`）：
 
 ```bash
-λ pipenv run pytest -rs -k 'module' src/chapter-10/
+λ pytest -rs -k 'module' src/chapter-10/
 ================================ test session starts ================================= 
 platform win32 -- Python 3.7.3, pytest-5.1.3, py-1.8.0, pluggy-0.13.0
 rootdir: D:\Personal Files\Projects\pytest-chinese-doc
@@ -384,7 +384,7 @@ def test_params(n, expected):
 执行：
 
 ```bash
-λ pipenv run pytest -rA src/chapter-10/test_params.py
+λ pytest -rA src/chapter-10/test_params.py
 ================================ test session starts ================================= 
 platform win32 -- Python 3.7.3, pytest-5.1.3, py-1.8.0, pluggy-0.13.0
 rootdir: D:\Personal Files\Projects\pytest-chinese-doc

@@ -61,7 +61,7 @@ def test_ehlo(smtp_connection):
 执行：
 
 ```bash
-$ pipenv run pytest -q src/chapter-4/test_smtpsimple.py 
+$ pytest -q src/chapter-4/test_smtpsimple.py 
 F                                                                 [100%]
 =============================== FAILURES ================================
 _______________________________ test_ehlo _______________________________
@@ -87,7 +87,7 @@ src/chapter-4/test_smtpsimple.py:35: AssertionError
 如果你不小心拼写出错，或者调用了一个未注册的`fixture`，你会得到一个`fixture <...> not found`的错误，并告诉你目前所有可用的`fixture`，如下：
 
 ```bash
-$ pipenv run pytest -q src/chapter-4/test_smtpsimple.py 
+$ pytest -q src/chapter-4/test_smtpsimple.py 
 E                                                                 [100%]
 ================================ ERRORS =================================
 ______________________ ERROR at setup of test_ehlo ______________________
@@ -183,7 +183,7 @@ def test_noop(smtp_connection):
 最后，让我们来执行这个测试模块：
 
 ```bash
-pipenv run pytest -q src/chapter-4/test_module.py 
+pytest -q src/chapter-4/test_module.py 
 FF                                                                [100%]
 =============================== FAILURES ================================
 _______________________________ test_ehlo _______________________________
@@ -280,7 +280,7 @@ def test_ehlo_in_module2(smtp_connection_package):
 最后，执行`src/chapter-4/package_expr`下所有的测试用例：
 
 ```bash
-$ pipenv run pytest -q src/chapter-4/package_expr/
+$ pytest -q src/chapter-4/package_expr/
 FFF                                                               [100%]
 =============================== FAILURES ================================
 _________________________ test_ehlo_in_module1 __________________________
@@ -433,7 +433,7 @@ def test_ehlo_yield(smtp_connection_yield):
 现在，我们来执行它：
 
 ```bash
-λ pipenv run pytest -q -s --tb=no src/chapter-4/test_smtpsimple.py::test_ehlo_yield
+λ pytest -q -s --tb=no src/chapter-4/test_smtpsimple.py::test_ehlo_yield
 F关闭SMTP连接
 
 1 failed in 0.18s
@@ -507,7 +507,7 @@ def test_163(smtp_connection_request):
 我们来看看效果：
 
 ```bash
-λ pipenv run pytest -q -s src/chapter-4/test_request.py
+λ pytest -q -s src/chapter-4/test_request.py
 .断开 mail.python.org：587
 
 1 passed in 4.03s
@@ -576,7 +576,7 @@ def test_parames(smtp_connection_params):
 执行：
 
 ```bash
-$ pipenv run pytest -q -s src/chapter-4/test_params.py 
+$ pytest -q -s src/chapter-4/test_params.py 
 .断开 smtp.163.com：25
 .断开 smtp.126.com：25
 
@@ -592,7 +592,7 @@ $ pipenv run pytest -q -s src/chapter-4/test_params.py
 使用`-k`选项执行一个指定的用例：
 
 ```bash
-$ pipenv run pytest -q -s -k 163 src/chapter-4/test_params.py 
+$ pytest -q -s -k 163 src/chapter-4/test_params.py 
 .断开 smtp.163.com：25
 
 1 passed, 1 deselected in 0.16s
@@ -601,7 +601,7 @@ $ pipenv run pytest -q -s -k 163 src/chapter-4/test_params.py
 使用`--collect-only`可以显示这些测试`ID`，而不执行用例：
 
 ```bash
-$ pipenv run pytest -q -s --collect-only src/chapter-4/test_params.py 
+$ pytest -q -s --collect-only src/chapter-4/test_params.py 
 src/chapter-4/test_params.py::test_parames[smtp.163.com]
 src/chapter-4/test_params.py::test_parames[smtp.126.com]
 
@@ -625,7 +625,7 @@ def test_a(a):
 执行`--collect-only`：
 
 ```bash
-$ pipenv run pytest -q -s --collect-only src/chapter-4/test_ids.py::test_a 
+$ pytest -q -s --collect-only src/chapter-4/test_ids.py::test_a 
 src/chapter-4/test_ids.py::test_a[spam]
 src/chapter-4/test_ids.py::test_a[ham]
 
@@ -662,7 +662,7 @@ def test_b(b):
 执行`--collect-only`：
 
 ```bash
-$ pipenv run pytest -q -s --collect-only src/chapter-4/test_ids.py::test_b 
+$ pytest -q -s --collect-only src/chapter-4/test_ids.py::test_b 
 src/chapter-4/test_ids.py::test_b[eggs]
 src/chapter-4/test_ids.py::test_b[False]
 src/chapter-4/test_ids.py::test_b[2]
@@ -699,7 +699,7 @@ no tests ran in 0.01s
 > 执行`--collect-only`：
 >
 > ```bash
-> $ pipenv run pytest -q -s --collect-only src/chapter-4/test_ids.py::test_c
+> $ pytest -q -s --collect-only src/chapter-4/test_ids.py::test_c
 > src/chapter-4/test_ids.py::test_c[c0]
 > src/chapter-4/test_ids.py::test_c[c1]
 > src/chapter-4/test_ids.py::test_c[c2]
@@ -736,7 +736,7 @@ def test_data(data_set):
 我们使用`pytest.param(('6*9', 42), marks=pytest.mark.xfail, id='failed')`的形式指定一个`request.param`入参，其中`marks`表示当用例使用这个入参时，为这个用例打上`xfail`标记；并且，我们还使用`id`为此时的用例指定了一个测试`ID`；
 
 ```bash
-$ pipenv run pytest -v src/chapter-4/test_fixture_marks.py::test_data
+$ pytest -v src/chapter-4/test_fixture_marks.py::test_data
 ============================ test session starts ============================
 platform darwin -- Python 3.7.3, pytest-5.1.3, py-1.8.0, pluggy-0.13.0 -- /Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-EK3zIUmM/bin/python3.7
 cachedir: .pytest_cache
@@ -771,7 +771,7 @@ def test_data2(test_input, expected):
 执行：
 
 ```bash
-pipenv run pytest -v src/chapter-4/test_fixture_marks.py::test_data2
+pytest -v src/chapter-4/test_fixture_marks.py::test_data2
 ============================ test session starts ============================
 platform darwin -- Python 3.7.3, pytest-5.1.3, py-1.8.0, pluggy-0.13.0 -- /Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-EK3zIUmM/bin/python3.7
 cachedir: .pytest_cache
@@ -815,7 +815,7 @@ def test_smtp_connection_exists(app):
 执行：
 
 ```bash
-$ pipenv run pytest -v src/chapter-4/test_appsetup.py 
+$ pytest -v src/chapter-4/test_appsetup.py 
 ============================ test session starts ============================
 platform darwin -- Python 3.7.3, pytest-5.1.3, py-1.8.0, pluggy-0.13.0 -- /Users/yaomeng/.local/share/virtualenvs/pytest-chinese-doc-EK3zIUmM/bin/python3.7
 cachedir: .pytest_cache
@@ -875,7 +875,7 @@ def test_2(otherarg, modarg):
 执行：
 
 ```bash
-$ pipenv run pytest -q -s src/chapter-4/test_minfixture.py 
+$ pytest -q -s src/chapter-4/test_minfixture.py 
   SETUP otherarg 1
   RUN test0 with otherarg 1
 .  TEARDOWN otherarg 1
@@ -953,7 +953,7 @@ class TestDirectoryInit:
 执行：
 
 ```bash
-$ pipenv run pytest -q -s src/chapter-4/test_setenv.py 
+$ pytest -q -s src/chapter-4/test_setenv.py 
 ..
 2 passed in 0.02s
 ```
@@ -1043,7 +1043,7 @@ class TestClass:
 执行：
 
 ```bash
-$ pipenv run pytest -q -s src/chapter-4/test_db_transact.py 
+$ pytest -q -s src/chapter-4/test_db_transact.py 
 ..
 2 passed in 0.01s
 ```
