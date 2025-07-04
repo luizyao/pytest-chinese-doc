@@ -48,12 +48,9 @@
 - [12、缓存：记录执行的状态](docs/12、缓存：记录执行的状态.md)
 
 
-# TODO
-
-- [ ] 阅读`pytest`源码
-- [x] 基于`pytest`，实践一个WEB自动化框架
-
-  [pytest-pyppeteer](https://github.com/luizyao/pytest-pyppeteer): Test with pyppeteer in pytest.
+# 相关项目
+* [Lamber](https://github.com/luizyao/lamber): 收集 pytest 测试执行数据，提供消费接口
+* [pytest-pyppeteer](https://github.com/luizyao/pytest-pyppeteer): Test with pyppeteer in pytest.
 
 
 # LICENSE
